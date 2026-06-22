@@ -1,16 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
 import { productos, type Producto } from "../data/productos";
+
+const formatMoney = (v: number) => `$${v.toLocaleString("es-AR")}`;
 
 function ProductCard({ producto }: { producto: Producto }) {
   const whatsappUrl = `https://wa.me/5492983541686?text=${encodeURIComponent(
     `Hola, quiero comprar ${producto.nombre}`
   )}`;
 
-  const [clientPrice, setClientPrice] = useState<number | "">(producto.precio);
-  const terms = [100, 200, 300, 400];
-  const priceNumber = typeof clientPrice === "number" && clientPrice > 0 ? clientPrice : producto.precio;
-  const formatMoney = (v: number) => `$${v.toLocaleString("es-AR")}`;
+  const [selectedCuota, setSelectedCuota] = useState<number | null>(
+    producto.cuotas && producto.cuotas.length > 0 ? 0 : null
+  );
+
+  const cuota = selectedCuota !== null && producto.cuotas ? producto.cuotas[selectedCuota] : null;
 
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white/90 shadow-[0_20px_80px_-40px_rgba(15,23,42,0.35)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:bg-white">
@@ -50,33 +55,35 @@ function ProductCard({ producto }: { producto: Producto }) {
             </a>
           </div>
 
-          <div className="rounded-lg border border-emerald-200/30 bg-emerald-50/60 p-4">
-            <label className="mb-2 block text-sm text-emerald-800">Precio (ingresado por la clienta)</label>
-            <div className="flex items-center gap-3">
-              <input
-                type="number"
-                value={clientPrice === "" ? "" : clientPrice}
-                onChange={(e) => setClientPrice(e.target.value === "" ? "" : Number(e.target.value))}
-                className="w-full rounded-md bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500"
-                placeholder={String(producto.precio)}
-                min={0}
-              />
-            </div>
+          {producto.cuotas && producto.cuotas.length > 0 && (
+            <div className="rounded-lg border border-emerald-200/30 bg-emerald-50/60 p-4">
+              <p className="mb-3 text-sm text-emerald-800 font-semibold">Selecciona tu plan de pago</p>
 
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {terms.map((t) => {
-                const cuotaFromProduct = producto.cuotas?.find((c) => c.dias === t)?.diaria;
-                const cuota = cuotaFromProduct ?? Math.ceil(priceNumber / t);
-                return (
-                  <div key={t} className="rounded-md bg-white p-3 text-center">
-                    <p className="text-sm text-slate-500">{t} días</p>
-                    <p className="mt-1 text-sm text-slate-500">Cuota diaria</p>
-                    <p className="mt-1 text-lg font-semibold text-slate-900">{formatMoney(cuota)}</p>
-                  </div>
-                );
-              })}
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {producto.cuotas.map((c, idx) => (
+                  <button
+                    key={c.dias}
+                    onClick={() => setSelectedCuota(idx)}
+                    className={`rounded-md p-3 text-center transition ${
+                      selectedCuota === idx
+                        ? "bg-emerald-600 text-white border-2 border-emerald-700"
+                        : "bg-white text-slate-900 border-2 border-transparent hover:border-emerald-300"
+                    }`}
+                  >
+                    <p className="text-sm font-medium">{c.dias} días</p>
+                    <p className="mt-1 text-xs opacity-75">Cuota diaria</p>
+                    <p className="mt-1 text-lg font-semibold">{formatMoney(c.diaria)}</p>
+                  </button>
+                ))}
+              </div>
+
+              {cuota && (
+                <div className="mt-4 rounded-md bg-white/80 p-3 text-center">
+                  <p className="text-sm text-slate-600">Total: {cuota.dias} días × {formatMoney(cuota.diaria)} = <span className="font-bold text-slate-900">{formatMoney(cuota.dias * cuota.diaria)}</span></p>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </article>
