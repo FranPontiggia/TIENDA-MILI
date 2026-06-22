@@ -76,12 +76,6 @@ function ProductCard({ producto }: { producto: Producto }) {
                   </button>
                 ))}
               </div>
-
-              {cuota && (
-                <div className="mt-4 rounded-md bg-white/80 p-3 text-center">
-                  <p className="text-sm text-slate-600">Total: {cuota.dias} días × {formatMoney(cuota.diaria)} = <span className="font-bold text-slate-900">{formatMoney(cuota.dias * cuota.diaria)}</span></p>
-                </div>
-              )}
             </div>
           )}
         </div>
