@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 import { productos, type Producto } from "../data/productos";
 
 function ProductCard({ producto }: { producto: Producto }) {
@@ -6,36 +7,76 @@ function ProductCard({ producto }: { producto: Producto }) {
     `Hola, quiero comprar ${producto.nombre}`
   )}`;
 
+  const [clientPrice, setClientPrice] = useState<number | "">(producto.precio);
+  const terms = [100, 200, 300, 400];
+  const priceNumber = typeof clientPrice === "number" && clientPrice > 0 ? clientPrice : producto.precio;
+  const formatMoney = (v: number) => `$${v.toLocaleString("es-AR")}`;
+
   return (
-    <article className="overflow-hidden rounded-3xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white/90 shadow-[0_20px_80px_-40px_rgba(15,23,42,0.35)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:bg-white">
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <Image
           src={producto.imagen}
           alt={producto.nombre}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition duration-500 hover:scale-105"
+          className="object-cover transition duration-500 group-hover:scale-105"
         />
       </div>
 
-      <div className="space-y-4 p-6">
+      <div className="space-y-5 p-6">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">{producto.nombre}</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-500">{producto.descripcion}</p>
+          <p className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.26em] text-emerald-700">
+            Popular
+          </p>
+          <h2 className="mt-5 text-2xl font-semibold text-slate-900">{producto.nombre}</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-600">{producto.descripcion}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <span className="h-3 w-3 rounded-full bg-slate-300/80" aria-hidden />
+            <p className="text-sm text-slate-600">Color: <span className="font-semibold text-slate-800">{producto.color}</span></p>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-2xl font-bold text-emerald-600">
-            ${producto.precio.toLocaleString("es-AR")}
-          </p>
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700"
-          >
-            WhatsApp
-          </a>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div />
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+            >
+              Comprar por WhatsApp
+            </a>
+          </div>
+
+          <div className="rounded-lg border border-emerald-200/30 bg-emerald-50/60 p-4">
+            <label className="mb-2 block text-sm text-emerald-800">Precio (ingresado por la clienta)</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="number"
+                value={clientPrice === "" ? "" : clientPrice}
+                onChange={(e) => setClientPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                className="w-full rounded-md bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500"
+                placeholder={String(producto.precio)}
+                min={0}
+              />
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {terms.map((t) => {
+                const cuotaFromProduct = producto.cuotas?.find((c) => c.dias === t)?.diaria;
+                const cuota = cuotaFromProduct ?? Math.ceil(priceNumber / t);
+                return (
+                  <div key={t} className="rounded-md bg-white p-3 text-center">
+                    <p className="text-sm text-slate-500">{t} días</p>
+                    <p className="mt-1 text-sm text-slate-500">Cuota diaria</p>
+                    <p className="mt-1 text-lg font-semibold text-slate-900">{formatMoney(cuota)}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </article>
@@ -44,36 +85,62 @@ function ProductCard({ producto }: { producto: Producto }) {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-50">
-      <section className="bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-emerald-100 via-slate-50 to-slate-50 text-center py-20 px-4">
-        <div className="mx-auto max-w-3xl">
-          <span className="inline-flex rounded-full bg-emerald-600/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-emerald-700">
-            Tienda de electrodomésticos
-          </span>
+    <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.18),_transparent_35%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.16),_transparent_20%)] px-6 py-24 sm:px-10">
+        <div className="absolute inset-x-0 top-0 h-60 bg-[linear-gradient(180deg,rgba(15,23,42,0.7),transparent)]" />
+        <div className="relative mx-auto flex max-w-7xl flex-col gap-10 xl:flex-row xl:items-center xl:gap-16">
+          <div className="max-w-2xl text-center xl:text-left">
+            <span className="inline-flex rounded-full bg-emerald-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-emerald-300">
+              Electrodomésticos premium
+            </span>
+            <h1 className="mt-8 text-5xl font-semibold tracking-tight text-white sm:text-6xl">
+              Tu hogar merece calidad, diseño y servicio rápido.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+              Descubre productos confiables con ayuda directa por WhatsApp, entrega ágil y atención personalizada para un hogar más cómodo.
+            </p>
 
-          <h1 className="mt-8 text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
-            MILI STORE
-          </h1>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <a
+                href="#productos"
+                className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-7 py-3 text-sm font-semibold text-slate-950 shadow-[0_20px_50px_-30px_rgba(16,185,129,0.7)] transition hover:bg-emerald-400"
+              >
+                Ver productos
+              </a>
+              <a
+                href="https://wa.me/5492983541686"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-slate-700/60 bg-slate-900/80 px-7 py-3 text-sm font-semibold text-slate-100 transition hover:border-slate-500 hover:bg-slate-800"
+              >
+                Chatear por WhatsApp
+              </a>
+            </div>
+          </div>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-600">
-            Electrodomésticos confiables para tu hogar, con envío y pedidos rápidos por WhatsApp.
-          </p>
-
-          <a
-            href="#productos"
-            className="mt-10 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
-          >
-            Ver productos
-          </a>
+          <div className="grid w-full max-w-xl grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center backdrop-blur-xl">
+              <p className="text-4xl font-semibold text-white">+150</p>
+              <p className="mt-3 text-sm text-slate-300">Clientes satisfechos</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center backdrop-blur-xl">
+              <p className="text-4xl font-semibold text-white">24h</p>
+              <p className="mt-3 text-sm text-slate-300">Atención por WhatsApp</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center backdrop-blur-xl">
+              <p className="text-4xl font-semibold text-white">Productos</p>
+              <p className="mt-3 text-sm text-slate-300">Selección confiable</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="productos" className="mx-auto max-w-7xl px-6 pb-16 pt-12">
-        <div className="mb-10 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-emerald-600">Electrodomésticos</p>
-          <h2 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Destacados para el hogar</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-slate-600">
-            Encuentra equipos prácticos y duraderos. Consulta stock y realiza tu pedido por WhatsApp.
+      <section id="productos" className="mx-auto max-w-7xl px-6 pb-20 pt-16 sm:px-10">
+        <div className="mb-12 text-center">
+          <p className="text-sm uppercase tracking-[0.3em] text-emerald-400">Electrodomésticos</p>
+          <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">Productos destacados</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-300">
+            Elegimos lo mejor para tu cocina y tu hogar, con estilo moderno, rendimiento fiable y compra fácil por WhatsApp.
           </p>
         </div>
 
