@@ -16,9 +16,30 @@ export const productos: Producto[] = [
   },
   {
     id: 2,
-    nombre: "Microondas 20L",
+    nombre: "pava electrica",
     precio: 45000,
-    descripcion: "Microondas compacto de 20L con funciones de descongelado y grill.",
+    descripcion: "Pava eléctrica de 1.5L con función de apagado automático.",
+    imagen: "",
+  },
+  {
+    id: 3,
+    nombre: "Lavarropa 6kg",
+    precio: 120000,
+    descripcion: "Lavarropa eficiente de 6kg, consumo reducido y programas rápidos.",
+    imagen: "/producto/lavarropa.png",
+  },
+  {
+    id: 4,
+    nombre: "Lavarropa 6kg",
+    precio: 120000,
+    descripcion: "Lavarropa eficiente de 6kg, consumo reducido y programas rápidos.",
+    imagen: "/producto/lavarropa.png",
+  },
+  {
+    id: 5,
+    nombre: "Lavarropa 6kg",
+    precio: 120000,
+    descripcion: "Lavarropa eficiente de 6kg, consumo reducido y programas rápidos.",
     imagen: "/producto/lavarropa.png",
   },
 ];
