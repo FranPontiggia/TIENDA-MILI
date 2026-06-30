@@ -1,8 +1,9 @@
-import { productos } from "../../../data/productos";;
+import { productos } from "@/data/productos";;
 import Image from "next/image";
 
-export default function ProductoPage({ params }: any) {
-  const producto = productos.find((p) => p.id == params.id);
+export default async function ProductoPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const producto = productos.find((p) => p.id == Number(id));
 
   if (!producto) {
     return (

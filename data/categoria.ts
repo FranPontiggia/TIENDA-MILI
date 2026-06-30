@@ -15,6 +15,7 @@ export const categorias: Categoria[] = [
 export const subcategorias: Subcategoria[] = [
   { nombre: "Electrohogar", categoria: "Hogar" },
   { nombre: "TV y Video", categoria: "Hogar" },
+  { nombre: "Cuidado personal", categoria: "Hogar" },
   { nombre: "Bazar", categoria: "Hogar" },
   { nombre: "Heladeras comerciales", categoria: "Comercio" },
   { nombre: "Balanzas", categoria: "Comercio" },

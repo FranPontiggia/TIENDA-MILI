@@ -2,8 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { productos } from "@/data/productos";
 
-export default function SubcategoriaPage({ params }: any) {
-  const subcategoria = params.subcategoria;
+export default async function SubcategoriaPage({ params }: { params: Promise<{ subcategoria: string }> }) {
+  const { subcategoria } = await params;
 
   const filtrados = productos.filter(
     (p) => p.subcategoria === subcategoria

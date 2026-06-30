@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { subcategorias } from "@/data/categoria";
 
-export default function CategoriaPage({ params }: { params: { categoria: string } }) {
+export default async function CategoriaPage({ params }: { params: Promise<{ categoria: string }> }) {
+  const { categoria } = await params;
   const filtradas = subcategorias.filter(
-    (s) => s.categoria === params.categoria
+    (s) => s.categoria === categoria
   );
 
   return (
     <main style={{ padding: 40, color: "white", background: "#0f172a", minHeight: "100vh" }}>
-      <h1>{params.categoria}</h1>
+      <h1>{categoria}</h1>
 
       <div style={{ display: "grid", gap: 20, marginTop: 30 }}>
         {filtradas.map((s) => (
