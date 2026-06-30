@@ -11,7 +11,7 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-4">
-              Cuota Market
+              Tienda Cuotas
             </h1>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
               Los mejores electrodomésticos y productos para tu hogar y negocio en planes de cuotas sin interés
