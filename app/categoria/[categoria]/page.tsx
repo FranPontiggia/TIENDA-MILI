@@ -1,36 +1,26 @@
 import Link from "next/link";
-import { subcategorias } from "../../../data/subcategoria";
+import { subcategorias } from "@/data/categoria";
 
-export default function CategoriaPage({ params }: any) {
-  const categoria = params.categoria;
-
+export default function CategoriaPage({ params }: { params: { categoria: string } }) {
   const filtradas = subcategorias.filter(
-    (s) => s.categoria === categoria
+    (s) => s.categoria === params.categoria
   );
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white p-10">
+    <main style={{ padding: 40, color: "white", background: "#0f172a", minHeight: "100vh" }}>
+      <h1>{params.categoria}</h1>
 
-      <h1 className="text-3xl font-bold mb-8">
-        {categoria}
-      </h1>
-
-      <div className="grid gap-6 md:grid-cols-3">
-
-        {filtradas.map((sub) => (
+      <div style={{ display: "grid", gap: 20, marginTop: 30 }}>
+        {filtradas.map((s) => (
           <Link
-            key={sub.nombre}
-            href={`/subcategoria/${sub.nombre}`}
-            className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
+            key={s.nombre}
+            href={`/subcategoria/${s.nombre}`}
+            style={{ padding: 20, background: "#1e293b", borderRadius: 10 }}
           >
-            <h2 className="text-xl font-semibold">
-              {sub.nombre}
-            </h2>
+            {s.nombre}
           </Link>
         ))}
-
       </div>
-
     </main>
   );
 }

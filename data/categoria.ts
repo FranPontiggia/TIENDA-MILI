@@ -1,3 +1,8 @@
+export type Subcategoria = {
+  nombre: string;
+  categoria: "Hogar" | "Comercio";
+};
+
 export type Categoria = {
   nombre: string;
 };
@@ -5,4 +10,12 @@ export type Categoria = {
 export const categorias: Categoria[] = [
   { nombre: "Hogar" },
   { nombre: "Comercio" },
+];
+
+export const subcategorias: Subcategoria[] = [
+  { nombre: "Electrohogar", categoria: "Hogar" },
+  { nombre: "TV y Video", categoria: "Hogar" },
+  { nombre: "Bazar", categoria: "Hogar" },
+  { nombre: "Heladeras comerciales", categoria: "Comercio" },
+  { nombre: "Balanzas", categoria: "Comercio" },
 ];
