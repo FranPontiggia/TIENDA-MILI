@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { productos, type Producto } from "../data/productos";
 
@@ -16,6 +17,7 @@ function ProductCard({ producto }: { producto: Producto }) {
   );
 
   const cuota = selectedCuota !== null && producto.cuotas ? producto.cuotas[selectedCuota] : null;
+  const cuota250 = Math.round(producto.precio / 250);
 
   return (
     <article className="group overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white/90 shadow-[0_20px_80px_-40px_rgba(15,23,42,0.35)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:bg-white">
@@ -34,7 +36,10 @@ function ProductCard({ producto }: { producto: Producto }) {
           <p className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.26em] text-emerald-700">
             Popular
           </p>
-          <h2 className="mt-5 text-2xl font-semibold text-slate-900">{producto.nombre}</h2>
+          <h2 className="mt-5 text-2xl font-semibold text-slate-900">
+            <Link href={`/product/${producto.id}`}>{producto.nombre}</Link>
+          </h2>
+          <p className="mt-2 text-lg font-semibold text-emerald-700">{formatMoney(cuota250)} por cuota (250 cuotas)</p>
           <p className="mt-3 text-sm leading-6 text-slate-600">{producto.descripcion}</p>
           <div className="mt-3 flex items-center gap-3">
             <span className="h-3 w-3 rounded-full bg-slate-300/80" aria-hidden />
@@ -53,6 +58,12 @@ function ProductCard({ producto }: { producto: Producto }) {
             >
               Comprar por WhatsApp
             </a>
+            <Link
+              href={`/product/${producto.id}`}
+              className="ml-3 inline-flex items-center justify-center rounded-full border border-slate-200/60 bg-white/90 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
+            >
+              Ver producto
+            </Link>
           </div>
 
           {producto.cuotas && producto.cuotas.length > 0 && (
@@ -92,10 +103,10 @@ export default function Home() {
         <div className="relative mx-auto flex max-w-7xl flex-col gap-10 xl:flex-row xl:items-center xl:gap-16">
           <div className="max-w-2xl text-center xl:text-left">
             <span className="inline-flex rounded-full bg-emerald-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-emerald-300">
-              Electrodomésticos premium
+              Todo para tu hogar y comercio en cuotas
             </span>
             <h1 className="mt-8 text-5xl font-semibold tracking-tight text-white sm:text-6xl">
-              Tu hogar merece calidad, diseño y servicio rápido.
+              Cuota Marquet
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
               Descubre productos confiables con ayuda directa por WhatsApp, entrega ágil y atención personalizada para un hogar más cómodo.
