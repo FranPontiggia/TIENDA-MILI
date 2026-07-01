@@ -11,7 +11,7 @@ export default async function Home() {
       <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-24">
         <header className="mb-16 text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
-            Cuota Market
+            Tienda Mili
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-base sm:text-lg text-slate-300">
             Todo para tu hogar y comercio en cuotas.
