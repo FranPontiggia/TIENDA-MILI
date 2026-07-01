@@ -1,4 +1,6 @@
-﻿export type Producto = {
+﻿import { productsTable, supabase } from "../lib/supabase";
+
+export type Producto = {
   id: number;
   nombre: string;
   precio: number;
@@ -11,113 +13,80 @@
   cuotas?: { dias: number; diaria: number }[];
 };
 
-export const productos: Producto[] = [
-  {
-    id: 1,
-    nombre: "Centro de planchado",
-    precio: 140000,
-    descripcion: "Centro de planchado, ideal para poder diferenciar ropa pendiente de planchado con la ya planchada. También te permitirá guardar líquidos y recipientes para planchado, plancha, alargue, etc. Posee dos puertas. Tela super resistente a altas temperaturas. Bisagras metálicas, manijas plásticas. Medidas Ancho 110cm, Alto 88cm, Profundidad 36cm",
-    color: "Blanco",
-    categoria: "Hogar",
-    subcategoria: "Cuidado hogar",
-    imagen: "/imagen/centro-planchado.jpeg",
-    imagenes: [
-      "/imagen/centro-planchado.jpeg",
-      "/imagen/centro-planchado-2.jpeg",
-      "/imagen/centro-planchado.jpeg",
-    ],
-    cuotas: [
-      { dias: 250, diaria: 1005 },
-      { dias: 200, diaria: 1182 },
-      { dias: 150, diaria: 1478 },
-      { dias: 100, diaria: 1892 },
-    ],
-  },
-  {
-    id: 2,
-    nombre: "Cafetera de Filtro Atma CA-8133",
-    precio: 45000,
-    descripcion: "Cafetera de filtro Atma con sistema antigoteo, filtro y portafiltro desmontable.",
-    color: "Blanca",
-    categoria: "Hogar",
-    subcategoria: "Electrohogar",
-    imagen: "/imagen/cafetera.jpeg",
-    imagenes: [
-      "/imagen/cafetera.jpeg",
-      "/imagen/cafetera-1.jpeg",
-      "/imagen/cafetera-2.jpeg",
-    ],
-    cuotas: [
-      { dias: 200, diaria: 542 },
-      { dias: 150, diaria: 678 },
-      { dias: 100, diaria: 868 },
-    ],
-  },
-  {
-    id: 3,
-    nombre: "Heladera vertical comercial",
-    precio: 350000,
-    descripcion: "Heladera ideal para negocios con gran capacidad.",
-    color: "Blanco",
-    categoria: "Comercio",
-    subcategoria: "Heladeras comerciales",
-    imagen: "/producto/heladera.png",
-    imagenes: [
-      "/producto/heladera.png",
-      "/producto/heladera.png",
-      "/producto/heladera.png",
-    ],
-    cuotas: [
-      { dias: 250, diaria: 1400 },
-      { dias: 200, diaria: 1750 },
-      { dias: 150, diaria: 2330 },
-      { dias: 100, diaria: 3500 },
-    ],
-  },
-  {
-    id: 4,
-    nombre: "Balanza digital",
-    precio: 80000,
-    descripcion: "Balanza precisa para comercio.",
-    color: "Negro",
-    categoria: "Comercio",
-    subcategoria: "Balanzas",
-    imagen: "/producto/balanza.png",
-    imagenes: [
-      "/producto/balanza.png",
-      "/producto/balanza.png",
-      "/producto/balanza.png",
-    ],
-    cuotas: [
-      { dias: 250, diaria: 320 },
-      { dias: 200, diaria: 400 },
-      { dias: 150, diaria: 533 },
-      { dias: 100, diaria: 800 },
-    ],
-  },
-  {
-    id: 5,
-    nombre: "Smart TV 43\"",
-    precio: 280000,
-    descripcion: "Televisor Smart con apps integradas.",
-    color: "Negro",
-    categoria: "Hogar",
-    subcategoria: "TV y Video",
-    imagen: "/producto/tv.png",
-    imagenes: [
-      "/producto/tv.png",
-      "/producto/tv.png",
-      "/producto/tv.png",
-    ],
-    cuotas: [
-      { dias: 250, diaria: 1120 },
-      { dias: 200, diaria: 1400 },
-      { dias: 150, diaria: 1866 },
-      { dias: 100, diaria: 2800 },
-    ],
-  },
-];
+type ProductoRow = {
+  id?: number | string | null;
+  nombre?: string | null;
+  precio?: number | string | null;
+  descripcion?: string | null;
+  color?: string | null;
+  categoria?: string | null;
+  subcategoria?: string | null;
+  imagen?: string | null;
+  imagenes?: unknown;
+  cuotas?: unknown;
+};
+
+function toString(value: unknown): string {
+  if (typeof value !== "string") return "";
+
+  return value.trim().replace(/^['"]|['"]$/g, "");
+}
+
+function toNumber(value: unknown): number {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
+function toStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+
+  const normalized = value.filter((item): item is string => typeof item === "string" && item.trim() !== "");
+  return normalized.length > 0 ? normalized : undefined;
+}
+
+function toCuotas(value: unknown): Producto["cuotas"] {
+  if (!Array.isArray(value)) return undefined;
+
+  const normalized = value.filter(
+    (item): item is { dias: number; diaria: number } =>
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as { dias?: unknown }).dias === "number" &&
+      typeof (item as { diaria?: unknown }).diaria === "number"
+  );
+
+  return normalized.length > 0 ? normalized : undefined;
+}
 
 export async function getProductos(): Promise<Producto[]> {
-  return productos;
+  if (!supabase) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from(productsTable)
+    .select("*")
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Error al obtener productos desde Supabase:", error.message);
+    return [];
+  }
+
+  return (data as ProductoRow[] | null | undefined ?? []).map((row) => {
+    const record = row as Record<string, unknown>;
+
+    return {
+      id: toNumber(record.id),
+      nombre: toString(record.nombre),
+      precio: toNumber(record.precio),
+      descripcion: toString(record.descripcion),
+      color: toString(record.color),
+      categoria: toString(record.categoria),
+      subcategoria: toString(record.subcategoria ?? record.subcategoría),
+      imagen: toString(record.imagen),
+      imagenes: toStringArray(record.imagenes),
+      cuotas: toCuotas(record.cuotas),
+    };
+  });
 }

@@ -115,19 +115,16 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
               <h2 className="text-xl font-bold mb-4">Elegí tu plan de pago</h2>
 
               <div className="rounded-lg border border-slate-700 overflow-hidden mb-8">
-                {/* Header del acordeón */}
                 <button
                   onClick={() => setExpanded(!expanded)}
                   className="w-full flex items-center justify-between p-4 bg-slate-900/50 hover:bg-slate-800 transition border-b border-slate-700"
                 >
                   <div className="text-left">
                     <p className="text-xs text-slate-400 font-semibold">PLAN SELECCIONADO</p>
-                    <p className="font-bold text-lg mt-1">
-                      {selected.dias} cuotas
+                    <p className="font-bold text-lg mt-1 text-white">
+                      {selected.dias} cuotas de {formatMoney(selected.diaria)}
                     </p>
-                    <p className="text-emerald-400 font-semibold">
-                      {formatMoney(selected.diaria)}/día
-                    </p>
+                    <p className="text-emerald-400 font-semibold">Precio por cuota</p>
                   </div>
                   <svg
                     className={`w-6 h-6 text-slate-400 transition-transform flex-shrink-0 ${
@@ -146,29 +143,30 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                   </svg>
                 </button>
 
-                {/* Planes expandidos */}
                 {expanded && (
                   <div className="bg-slate-950">
                     {cuotas.map((c, idx) => (
                       <button
-                        key={c.dias}
+                        key={`${c.dias}-${c.diaria}`}
                         onClick={() => {
                           setSelectedIdx(idx);
                           setExpanded(false);
                         }}
-                        className={`w-full flex items-center justify-between p-4 border-t border-slate-700 hover:bg-slate-900 transition text-left ${
-                          selectedIdx === idx ? "bg-emerald-600/20" : ""
+                        className={`w-full flex items-center justify-between p-4 border-t border-slate-700 transition text-left ${
+                          selectedIdx === idx
+                            ? "bg-emerald-600/20 border-emerald-500/30"
+                            : "hover:bg-slate-900"
                         }`}
                       >
                         <div className="flex-1">
-                          <p className="font-semibold text-lg">{c.dias} cuotas</p>
+                          <p className="font-semibold text-lg">{c.dias} cuotas de {formatMoney(c.diaria)}</p>
                           <p className="text-sm text-slate-400 mt-1">
-                            {formatMoney(c.diaria)}/día • Total: {formatMoney(c.diaria * c.dias)}
+                            Total: {formatMoney(c.diaria * c.dias)}
                           </p>
                         </div>
                         {selectedIdx === idx && (
-                          <div className="text-emerald-400 ml-4 flex-shrink-0">
-                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                          <div className="ml-4 flex-shrink-0 rounded-full bg-emerald-500/15 p-2 text-emerald-400">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                             </svg>
                           </div>

@@ -85,7 +85,7 @@ export default async function Home() {
                     <div className="mt-6 flex items-center justify-between gap-3">
                       <span className="text-emerald-400 font-bold text-xl">
                         {primeraCuota
-                          ? `$${primeraCuota.diaria}/día · ${primeraCuota.dias} cuotas`
+                          ? `${primeraCuota.dias} cuotas de $${primeraCuota.diaria}`
                           : "En cuotas"}
                       </span>
                       <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">

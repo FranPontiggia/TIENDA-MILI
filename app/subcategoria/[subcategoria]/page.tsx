@@ -59,10 +59,10 @@ export default async function SubcategoriaPage({ params }: { params: Promise<{ s
                       {p.nombre}
                     </h2>
                     <p className="mt-2 text-sm text-emerald-400">
-                      {primeraCuota ? `$${primeraCuota.diaria}/día` : "En cuotas"}
+                      {primeraCuota ? `${primeraCuota.dias} cuotas de $${primeraCuota.diaria}` : "En cuotas"}
                     </p>
                     <p className="text-sm text-slate-400">
-                      {primeraCuota ? `${primeraCuota.dias} cuotas` : "Ver detalle"}
+                      {primeraCuota ? "Ver detalle" : "Ver detalle"}
                     </p>
                   </div>
 
