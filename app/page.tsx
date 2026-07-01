@@ -55,41 +55,47 @@ export default async function Home() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {destacados.map((producto) => (
-              <Link
-                key={producto.id}
-                href={`/producto/${producto.id}`}
-                className="group overflow-hidden rounded-[28px] border border-slate-700/70 bg-slate-900/80 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
-              >
-                <div className="relative h-64 w-full overflow-hidden bg-slate-900">
-                  <img
-                    src={producto.imagen}
-                    alt={producto.nombre}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
-                </div>
-                <div className="p-6">
-                  <div className="text-xs uppercase tracking-[0.35em] text-slate-500">
-                    {producto.categoria} · {producto.subcategoria}
+            {destacados.map((producto) => {
+              const primeraCuota = producto.cuotas?.[0];
+
+              return (
+                <Link
+                  key={producto.id}
+                  href={`/producto/${producto.id}`}
+                  className="group overflow-hidden rounded-[28px] border border-slate-700/70 bg-slate-900/80 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
+                >
+                  <div className="relative h-64 w-full overflow-hidden bg-slate-900">
+                    <img
+                      src={producto.imagen}
+                      alt={producto.nombre}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
                   </div>
-                  <h3 className="mt-4 text-2xl font-semibold text-white line-clamp-2">
-                    {producto.nombre}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-400 line-clamp-3">
-                    {producto.descripcion}
-                  </p>
-                  <div className="mt-6 flex items-center justify-between gap-3">
-                    <span className="text-emerald-400 font-bold text-xl">
-                      ${producto.precio}
-                    </span>
-                    <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">
-                      Ver producto
-                    </span>
+                  <div className="p-6">
+                    <div className="text-xs uppercase tracking-[0.35em] text-slate-500">
+                      {producto.categoria} · {producto.subcategoria}
+                    </div>
+                    <h3 className="mt-4 text-2xl font-semibold text-white line-clamp-2">
+                      {producto.nombre}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-400 line-clamp-3">
+                      {producto.descripcion}
+                    </p>
+                    <div className="mt-6 flex items-center justify-between gap-3">
+                      <span className="text-emerald-400 font-bold text-xl">
+                        {primeraCuota
+                          ? `$${primeraCuota.diaria}/día · ${primeraCuota.dias} cuotas`
+                          : "En cuotas"}
+                      </span>
+                      <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">
+                      Ver detalle
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </section>
       </div>

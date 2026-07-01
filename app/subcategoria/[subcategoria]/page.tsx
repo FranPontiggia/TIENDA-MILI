@@ -4,10 +4,11 @@ import { getProductos } from "@/data/productos";
 
 export default async function SubcategoriaPage({ params }: { params: Promise<{ subcategoria: string }> }) {
   const { subcategoria } = await params;
+  const decodedSubcategoria = decodeURIComponent(subcategoria);
   const productos = await getProductos();
 
   const filtrados = productos.filter(
-    (p) => p.subcategoria === subcategoria
+    (p) => p.subcategoria.toLowerCase() === decodedSubcategoria.toLowerCase()
   );
 
   return (
@@ -27,66 +28,48 @@ export default async function SubcategoriaPage({ params }: { params: Promise<{ s
             </Link>
 
             <h1 className="text-4xl sm:text-5xl font-bold capitalize mb-2">
-              {subcategoria}
+              {decodedSubcategoria}
             </h1>
             <p className="text-slate-400">
               {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""} disponible{filtrados.length !== 1 ? "s" : ""}
             </p>
           </div>
 
-          {/* Grid de productos */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-4">
             {filtrados.map((p) => {
-              const cuota250 = Math.round(p.precio / 250);
+              const primeraCuota = p.cuotas?.[0];
 
               return (
                 <Link
                   key={p.id}
                   href={`/producto/${p.id}`}
-                  className="group relative overflow-hidden rounded-2xl"
+                  className="group flex items-center gap-4 rounded-3xl border border-slate-800 bg-slate-900/80 p-3 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-emerald-500/50"
                 >
-                  {/* Background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/10 to-blue-600/10 group-hover:from-emerald-600/30 group-hover:to-blue-600/30 transition-all duration-300" />
-                  <div className="absolute inset-0 border border-slate-700/50 group-hover:border-emerald-500/50 transition-all rounded-2xl" />
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-slate-800 sm:h-28 sm:w-28">
+                    <Image
+                      src={p.imagen}
+                      alt={p.nombre}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  </div>
 
-                  <div className="relative overflow-hidden">
-                    {/* Imagen */}
-                    <div className="relative h-56 bg-slate-800 overflow-hidden">
-                      <Image
-                        src={p.imagen}
-                        alt={p.nombre}
-                        fill
-                        className="object-cover group-hover:scale-110 transition duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    </div>
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-lg font-semibold text-white line-clamp-2">
+                      {p.nombre}
+                    </h2>
+                    <p className="mt-2 text-sm text-emerald-400">
+                      {primeraCuota ? `$${primeraCuota.diaria}/día` : "En cuotas"}
+                    </p>
+                    <p className="text-sm text-slate-400">
+                      {primeraCuota ? `${primeraCuota.dias} cuotas` : "Ver detalle"}
+                    </p>
+                  </div>
 
-                    {/* Info */}
-                    <div className="relative p-4 sm:p-6 backdrop-blur-sm">
-                      <h2 className="font-bold text-lg sm:text-xl group-hover:text-emerald-300 transition mb-2 line-clamp-2">
-                        {p.nombre}
-                      </h2>
-
-                      <p className="text-xs text-slate-400 mb-3">
-                        {p.descripcion}
-                      </p>
-
-                      <div className="mb-4 pb-4 border-t border-slate-700">
-                        <p className="text-emerald-400 font-bold text-lg mt-3 mb-1">
-                          {cuota250}€/día
-                        </p>
-                        <p className="text-xs text-slate-400">
-                          en 250 cuotas
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm group-hover:text-emerald-300 transition">
-                        Ver detalles
-                        <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500/20">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </Link>
               );

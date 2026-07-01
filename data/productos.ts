@@ -19,12 +19,12 @@ export const productos: Producto[] = [
     descripcion: "Centro de planchado, ideal para poder diferenciar ropa pendiente de planchado con la ya planchada. También te permitirá guardar líquidos y recipientes para planchado, plancha, alargue, etc. Posee dos puertas. Tela super resistente a altas temperaturas. Bisagras metálicas, manijas plásticas. Medidas Ancho 110cm, Alto 88cm, Profundidad 36cm",
     color: "Blanco",
     categoria: "Hogar",
-    subcategoria: "Cuidado Hogar",
-    imagen: "/imagen/centro-planchado.png",
+    subcategoria: "Cuidado hogar",
+    imagen: "/imagen/centro-planchado.jpeg",
     imagenes: [
-      "/imagen/centro-planchado.png",
-      "/imagen/centro-planchado 2.png",
-      "/imagen/centro-planchado.png",
+      "/imagen/centro-planchado.jpeg",
+      "/imagen/centro-planchado-2.jpeg",
+      "/imagen/centro-planchado.jpeg",
     ],
     cuotas: [
       { dias: 250, diaria: 1005 },
