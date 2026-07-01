@@ -1,6 +1,6 @@
 ﻿import Link from "next/link";
 import { categorias } from "@/data/categoria";
-import { getProductos, supabaseConfigured } from "@/data/productos";
+import { getProductos } from "@/data/productos";
 
 export default async function Home() {
   const productos = await getProductos();
@@ -10,27 +10,13 @@ export default async function Home() {
     <main className="min-h-screen bg-slate-950 text-white">
       <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-24">
         <header className="mb-16 text-center">
-          <p className="text-sm uppercase tracking-[0.4em] text-emerald-400/80 mb-4">
-            Tienda Cuotas
-          </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
-            Elegí tu categoría
+            Cuota Market
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-base sm:text-lg text-slate-300">
-            Comenzá desde el inicio con Hogar o Comercio y encontrá rápidamente productos en cuotas.
+            Todo para tu hogar y comercio en cuotas.
           </p>
         </header>
-
-        {!supabaseConfigured && (
-          <div className="mb-14 rounded-3xl border border-amber-500/30 bg-amber-500/10 p-5 text-amber-100">
-            <p className="font-semibold text-amber-200">Supabase no está configurado</p>
-            <p className="mt-2 text-sm sm:text-base text-amber-100">
-              Crea <code className="rounded bg-slate-900 px-1 py-0.5">.env.local</code> con
-              <span className="font-semibold"> NEXT_PUBLIC_SUPABASE_URL</span> y
-              <span className="font-semibold"> NEXT_PUBLIC_SUPABASE_ANON_KEY</span>, luego reinicia el servidor.
-            </p>
-          </div>
-        )}
 
         <section className="grid gap-6 md:grid-cols-2 mb-16">
           {categorias.map((categoria) => (
