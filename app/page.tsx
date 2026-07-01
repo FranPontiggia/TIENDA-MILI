@@ -1,6 +1,5 @@
 ﻿import Link from "next/link";
-import Image from "next/image";
-import { categorias, subcategorias } from "@/data/categoria";
+import { categorias } from "@/data/categoria";
 import { getProductos, supabaseConfigured } from "@/data/productos";
 
 export default async function Home() {
@@ -15,11 +14,10 @@ export default async function Home() {
             Tienda Cuotas
           </p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
-            Productos en cuotas para el hogar y el comercio
+            Elegí tu categoría
           </h1>
           <p className="mx-auto mt-5 max-w-3xl text-base sm:text-lg text-slate-300">
-            Elegí una categoría, navegá subcategorías y encontrá los mejores planes de pago.
-            Si querés cargar tus productos por Supabase, completá las variables y reiniciá.
+            Comenzá desde el inicio con Hogar o Comercio y encontrá rápidamente productos en cuotas.
           </p>
         </header>
 
@@ -34,24 +32,27 @@ export default async function Home() {
           </div>
         )}
 
-        <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-16">
+        <section className="grid gap-6 md:grid-cols-2 mb-16">
           {categorias.map((categoria) => (
             <Link
               key={categoria.nombre}
               href={`/categoria/${encodeURIComponent(categoria.nombre)}`}
-              className="group overflow-hidden rounded-[28px] border border-slate-700/70 bg-slate-900/80 p-8 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
+              className="group relative overflow-hidden rounded-[28px] border border-slate-700/80 bg-slate-900/90 p-10 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
             >
-              <div className="text-sm uppercase tracking-[0.35em] text-slate-500 mb-3">
-                Categoría
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-500/10 text-3xl text-emerald-300">
+                {categoria.nombre === "Hogar" ? "🏠" : "🏬"}
               </div>
-              <h2 className="text-3xl font-semibold text-white mb-4 capitalize">
+              <p className="text-sm uppercase tracking-[0.35em] text-slate-500 mb-3">
+                Categoría
+              </p>
+              <h2 className="text-4xl font-semibold text-white capitalize">
                 {categoria.nombre}
               </h2>
-              <p className="text-slate-400 leading-7">
-                Navegá subcategorías, compará productos y encontrá las cuotas más convenientes.
+              <p className="mt-4 text-slate-400 leading-7">
+                Ver productos y subcategorías para {categoria.nombre.toLowerCase()}.
               </p>
               <div className="mt-8 inline-flex items-center gap-2 text-emerald-400 font-semibold">
-                Ver subcategorías
+                Ir a {categoria.nombre}
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </div>
             </Link>
@@ -61,37 +62,10 @@ export default async function Home() {
         <section className="mb-16">
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Subcategorías</p>
-              <h2 className="text-3xl font-bold text-white">Explora por tipo de producto</h2>
+              <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Productos destacados</p>
+              <h2 className="text-3xl font-bold text-white">Lo más elegido</h2>
             </div>
-            <p className="text-sm text-slate-400">Encontrá rápido lo que buscás.</p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {subcategorias.slice(0, 6).map((subcategoria) => (
-              <Link
-                key={subcategoria.nombre}
-                href={`/subcategoria/${encodeURIComponent(subcategoria.nombre)}`}
-                className="rounded-3xl border border-slate-700/70 bg-slate-900/80 px-6 py-8 transition hover:border-emerald-400/40 hover:bg-slate-900"
-              >
-                <div className="text-sm uppercase tracking-[0.35em] text-slate-500 mb-2">
-                  {subcategoria.categoria}
-                </div>
-                <h3 className="text-2xl font-semibold text-white capitalize">
-                  {subcategoria.nombre}
-                </h3>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-10">
-          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Destacados</p>
-              <h2 className="text-3xl font-bold text-white">Productos más populares</h2>
-            </div>
-            <p className="text-sm text-slate-400">Clic en cualquier card para ver el plan de cuotas.</p>
+            <p className="text-sm text-slate-400">Seleccioná un producto para ver sus cuotas.</p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -102,11 +76,10 @@ export default async function Home() {
                 className="group overflow-hidden rounded-[28px] border border-slate-700/70 bg-slate-900/80 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
               >
                 <div className="relative h-64 w-full overflow-hidden bg-slate-900">
-                  <Image
+                  <img
                     src={producto.imagen}
                     alt={producto.nombre}
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
                 </div>
