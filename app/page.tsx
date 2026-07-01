@@ -89,7 +89,7 @@ export default async function Home() {
                           : "En cuotas"}
                       </span>
                       <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">
-                      Ver detalle
+                      Cuotas
                       </span>
                     </div>
                   </div>
