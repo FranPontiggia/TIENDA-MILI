@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tienda Mili",
+  title: "Cuota Market",
   description: "Electrodomésticos confiables para tu hogar. Pedidos y consultas por WhatsApp.",
 };
 
