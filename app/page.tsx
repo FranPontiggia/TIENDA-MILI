@@ -1,81 +1,77 @@
-import Link from "next/link";
-import { categorias } from "../data/categoria";
+﻿import Link from "next/link";
+import Image from "next/image";
+import { getProductos, supabaseConfigured } from "@/data/productos";
 
-export default function Home() {
+export default async function Home() {
+  const productos = await getProductos();
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-black text-white">
-      {/* Hero Section */}
-      <section className="relative px-6 py-20 sm:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-blue-500/10 pointer-events-none" />
-        
-        <div className="relative mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-4">
+      <div className="px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl">
+          <section className="mb-14 text-center">
+            <p className="text-sm uppercase tracking-[0.4em] text-emerald-400/80 mb-4">
               Tienda Cuotas
-            </h1>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Los mejores electrodomésticos y productos para tu hogar y negocio en planes de cuotas sin interés
             </p>
-          </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+              Productos en cuotas para hogar y comercio
+            </h1>
+            <p className="mx-auto mt-5 max-w-3xl text-base sm:text-lg text-slate-300">
+              Cargá tus productos desde Supabase y mostralos automáticamente con un diseño moderno y planes claros.
+            </p>
+          </section>
 
-          <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
-            {categorias.map((cat, idx) => (
+          {!supabaseConfigured && (
+            <div className="mb-10 rounded-3xl border border-amber-500/30 bg-amber-500/10 p-6 text-amber-100">
+              <p className="font-semibold text-amber-200">Supabase no está configurado</p>
+              <p className="mt-2 text-sm sm:text-base text-amber-100">
+                Crea <code className="rounded bg-slate-900 px-1 py-0.5">.env.local</code> con tus valores
+                <span className="font-semibold"> NEXT_PUBLIC_SUPABASE_URL</span> y
+                <span className="font-semibold"> NEXT_PUBLIC_SUPABASE_ANON_KEY</span>, luego reinicia el servidor.
+              </p>
+            </div>
+          )}
+
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {productos.map((producto) => (
               <Link
-                key={cat.nombre}
-                href={`/categoria/${cat.nombre}`}
-                className="group relative overflow-hidden rounded-2xl"
+                key={producto.id}
+                href={`/producto/${producto.id}`}
+                className="group overflow-hidden rounded-[28px] border border-slate-700/70 bg-slate-950/90 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 to-blue-600/20 group-hover:from-emerald-600/40 group-hover:to-blue-600/40 transition-all duration-300" />
-                <div className="absolute inset-0 border border-emerald-500/20 group-hover:border-emerald-400/40 transition-all rounded-2xl" />
-                
-                <div className="relative p-8 sm:p-10 backdrop-blur-sm">
-                  <div className="mb-4">
-                    {idx === 0 ? (
-                      <div className="text-5xl mb-4">🏡</div>
-                    ) : (
-                      <div className="text-5xl mb-4">🏪</div>
-                    )}
+                <div className="relative h-64 w-full overflow-hidden bg-slate-900">
+                  <Image
+                    src={producto.imagen}
+                    alt={producto.nombre}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
+                </div>
+                <div className="p-6">
+                  <div className="text-xs uppercase tracking-[0.35em] text-slate-500">
+                    {producto.categoria} · {producto.subcategoria}
                   </div>
-                  
-                  <h2 className="text-3xl font-bold mb-2 group-hover:text-emerald-300 transition">
-                    {cat.nombre}
+                  <h2 className="mt-4 text-2xl font-semibold text-white line-clamp-2">
+                    {producto.nombre}
                   </h2>
-                  <p className="text-slate-300 text-sm mb-4">
-                    {idx === 0
-                      ? "Electrohogar, TV, bazar, cuidado personal y más"
-                      : "Heladeras, balanzas, freezer, panadería y más"}
+                  <p className="mt-3 text-sm leading-6 text-slate-400 line-clamp-3">
+                    {producto.descripcion}
                   </p>
-                  
-                  <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
-                    Ver subcategorías
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                  <div className="mt-6 flex items-center justify-between gap-3">
+                    <span className="text-emerald-400 font-bold text-xl">
+                      ${producto.precio}
+                    </span>
+                    <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">
+                      Ver producto
+                    </span>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 px-6 border-t border-slate-800">
-        <div className="mx-auto max-w-6xl grid grid-cols-3 gap-4 sm:gap-8">
-          <div className="text-center">
-            <p className="text-2xl sm:text-3xl font-bold text-emerald-400 mb-2">+150</p>
-            <p className="text-xs sm:text-sm text-slate-400">Clientes satisfechos</p>
-          </div>
-          <div className="text-center border-l border-r border-slate-800">
-            <p className="text-2xl sm:text-3xl font-bold text-blue-400 mb-2">24h</p>
-            <p className="text-xs sm:text-sm text-slate-400">Atención WhatsApp</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl sm:text-3xl font-bold text-emerald-400 mb-2">+50</p>
-            <p className="text-xs sm:text-sm text-slate-400">Productos</p>
-          </div>
-        </div>
-      </section>
+      </div>
     </main>
   );
 }

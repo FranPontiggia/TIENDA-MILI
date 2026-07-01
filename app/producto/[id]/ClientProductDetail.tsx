@@ -10,9 +10,15 @@ const formatMoney = (v: number) => `$${v.toLocaleString("es-AR")}`;
 export default function ClientProductDetail({ producto }: { producto: Producto }) {
   const [expanded, setExpanded] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
 
   const cuotas = producto.cuotas || [];
   if (cuotas.length === 0) return null;
+
+  const images = (producto.imagenes && producto.imagenes.length > 0
+    ? producto.imagenes
+    : [producto.imagen]).filter(Boolean);
+  const currentImage = images[activeImageIdx] || producto.imagen;
 
   const selected = cuotas[selectedIdx];
   const whatsapp = `https://wa.me/5492983541686?text=${encodeURIComponent(
@@ -37,15 +43,54 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Imagen */}
             <div className="flex items-start">
-              <div className="relative w-full rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
+              <div className="w-full rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
                 <div className="aspect-square relative">
                   <Image
-                    src={producto.imagen}
+                    src={currentImage}
                     alt={producto.nombre}
                     fill
                     className="object-cover"
                   />
                 </div>
+
+                {images.length > 1 && (
+                  <div className="border-t border-slate-700 bg-slate-900/80 p-3">
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <button
+                        type="button"
+                        onClick={() => setActiveImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+                        className="rounded-full border border-slate-600 px-3 py-1 text-sm text-slate-200 hover:bg-slate-800"
+                      >
+                        ← Anterior
+                      </button>
+                      <p className="text-sm text-slate-400">
+                        {activeImageIdx + 1} / {images.length}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setActiveImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+                        className="rounded-full border border-slate-600 px-3 py-1 text-sm text-slate-200 hover:bg-slate-800"
+                      >
+                        Siguiente →
+                      </button>
+                    </div>
+
+                    <div className="flex gap-2 overflow-x-auto">
+                      {images.map((img, idx) => (
+                        <button
+                          key={`${img}-${idx}`}
+                          type="button"
+                          onClick={() => setActiveImageIdx(idx)}
+                          className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border ${
+                            activeImageIdx === idx ? "border-emerald-400" : "border-slate-700"
+                          }`}
+                        >
+                          <Image src={img} alt={`${producto.nombre} ${idx + 1}`} fill className="object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

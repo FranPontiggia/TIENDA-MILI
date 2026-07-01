@@ -1,8 +1,9 @@
-import { productos } from "@/data/productos";
+import { getProductos } from "@/data/productos";
 import ClientProductDetail from "./ClientProductDetail";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const productos = await getProductos();
   const producto = productos.find((p) => p.id == Number(id));
 
   if (!producto) {

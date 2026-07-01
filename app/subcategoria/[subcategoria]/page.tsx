@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { productos } from "@/data/productos";
+import { getProductos } from "@/data/productos";
 
 export default async function SubcategoriaPage({ params }: { params: Promise<{ subcategoria: string }> }) {
   const { subcategoria } = await params;
+  const productos = await getProductos();
 
   const filtrados = productos.filter(
     (p) => p.subcategoria === subcategoria
