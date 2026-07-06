@@ -1,5 +1,6 @@
 ﻿import { productsTable, supabase } from "../lib/supabase";
 import { getSubcategoriaVariants } from "./catalogo";
+import localProducts from "../products-import.json";
 
 export type Producto = {
   id: number;
@@ -112,9 +113,15 @@ function sanitizePageSize(value: number): number {
   return Math.min(Math.floor(value), 60);
 }
 
+function getLocalProductos(): Producto[] {
+  return ((localProducts as ProductoRow[] | null | undefined) ?? [])
+    .map(toProducto)
+    .filter((producto) => producto.id > 0);
+}
+
 export async function getProductos(): Promise<Producto[]> {
   if (!supabase) {
-    return [];
+    return getLocalProductos();
   }
 
   const { data, error } = await supabase
@@ -124,7 +131,7 @@ export async function getProductos(): Promise<Producto[]> {
 
   if (error) {
     console.error("Error al obtener productos desde Supabase:", error.message);
-    return [];
+    return getLocalProductos();
   }
 
   return (data as ProductoRow[] | null | undefined ?? []).map(toProducto).filter((producto) => producto.id > 0);
@@ -146,7 +153,8 @@ export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
 
   if (error) {
     console.error("Error al obtener productos destacados:", error.message);
-    return [];
+    const productos = await getProductos();
+    return productos.slice(0, safeLimit);
   }
 
   return (data as ProductoRow[] | null | undefined ?? []).map(toProducto).filter((producto) => producto.id > 0);
@@ -164,7 +172,8 @@ export async function getProductoById(id: number): Promise<Producto | null> {
 
   if (error) {
     console.error(`Error al obtener producto ${id}:`, error.message);
-    return null;
+    const productos = await getProductos();
+    return productos.find((producto) => producto.id === id) ?? null;
   }
 
   if (!data) return null;
@@ -227,12 +236,23 @@ export async function getProductosBySubcategoriaPaginated(
 
   if (error) {
     console.error("Error al obtener productos paginados por subcategoria:", error.message);
+    const productos = await getProductos();
+    const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
+    const filtrados = productos.filter((producto) =>
+      normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
+    );
+    const total = filtrados.length;
+    const totalPages = Math.max(1, Math.ceil(total / safePageSize));
+    const pageClamped = Math.min(safePage, totalPages);
+    const fallbackStart = (pageClamped - 1) * safePageSize;
+    const fallbackEnd = fallbackStart + safePageSize;
+
     return {
-      productos: [],
-      total: 0,
-      page: 1,
+      productos: filtrados.slice(fallbackStart, fallbackEnd),
+      total,
+      page: pageClamped,
       pageSize: safePageSize,
-      totalPages: 1,
+      totalPages,
     };
   }
 
