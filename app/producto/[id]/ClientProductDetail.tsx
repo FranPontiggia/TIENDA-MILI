@@ -13,7 +13,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   const [activeImageIdx, setActiveImageIdx] = useState(0);
 
   const cuotas = producto.cuotas || [];
-  if (cuotas.length === 0) return null;
+  const hasCuotas = cuotas.length > 0;
 
   const images = (producto.imagenes && producto.imagenes.length > 0
     ? producto.imagenes
@@ -22,7 +22,9 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
 
   const selected = cuotas[selectedIdx];
   const whatsapp = `https://wa.me/5492983541686?text=${encodeURIComponent(
-    `Hola, quiero comprar ${producto.nombre} - Plan: ${selected.dias} cuotas a $${selected.diaria} por día`
+    hasCuotas && selected
+      ? `Hola, quiero comprar ${producto.nombre} - Plan: ${selected.dias} cuotas a $${selected.diaria} por día`
+      : `Hola, quiero consultar por ${producto.nombre}`
   )}`;
 
   return (
@@ -112,70 +114,78 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
               </div>
 
               {/* Planes de Pago - Acordeón */}
-              <h2 className="text-xl font-bold mb-4">Elegí tu plan de pago</h2>
+              {hasCuotas && selected ? (
+                <>
+                  <h2 className="text-xl font-bold mb-4">Elegi tu plan de pago</h2>
 
-              <div className="rounded-lg border border-slate-700 overflow-hidden mb-8">
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="w-full flex items-center justify-between p-4 bg-slate-900/50 hover:bg-slate-800 transition border-b border-slate-700"
-                >
-                  <div className="text-left">
-                    <p className="text-xs text-slate-400 font-semibold">PLAN SELECCIONADO</p>
-                    <p className="font-bold text-lg mt-1 text-white">
-                      {selected.dias} cuotas de {formatMoney(selected.diaria)}
-                    </p>
-                    <p className="text-emerald-400 font-semibold">Precio por cuota</p>
-                  </div>
-                  <svg
-                    className={`w-6 h-6 text-slate-400 transition-transform flex-shrink-0 ${
-                      expanded ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                    />
-                  </svg>
-                </button>
-
-                {expanded && (
-                  <div className="bg-slate-950">
-                    {cuotas.map((c, idx) => (
-                      <button
-                        key={`${c.dias}-${c.diaria}`}
-                        onClick={() => {
-                          setSelectedIdx(idx);
-                          setExpanded(false);
-                        }}
-                        className={`w-full flex items-center justify-between p-4 border-t border-slate-700 transition text-left ${
-                          selectedIdx === idx
-                            ? "bg-emerald-600/20 border-emerald-500/30"
-                            : "hover:bg-slate-900"
+                  <div className="rounded-lg border border-slate-700 overflow-hidden mb-8">
+                    <button
+                      onClick={() => setExpanded(!expanded)}
+                      className="w-full flex items-center justify-between p-4 bg-slate-900/50 hover:bg-slate-800 transition border-b border-slate-700"
+                    >
+                      <div className="text-left">
+                        <p className="text-xs text-slate-400 font-semibold">PLAN SELECCIONADO</p>
+                        <p className="font-bold text-lg mt-1 text-white">
+                          {selected.dias} cuotas de {formatMoney(selected.diaria)}
+                        </p>
+                        <p className="text-emerald-400 font-semibold">Precio por cuota</p>
+                      </div>
+                      <svg
+                        className={`w-6 h-6 text-slate-400 transition-transform flex-shrink-0 ${
+                          expanded ? "rotate-180" : ""
                         }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <div className="flex-1">
-                          <p className="font-semibold text-lg">{c.dias} cuotas de {formatMoney(c.diaria)}</p>
-                          <p className="text-sm text-slate-400 mt-1">
-                            Total: {formatMoney(c.diaria * c.dias)}
-                          </p>
-                        </div>
-                        {selectedIdx === idx && (
-                          <div className="ml-4 flex-shrink-0 rounded-full bg-emerald-500/15 p-2 text-emerald-400">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                            </svg>
-                          </div>
-                        )}
-                      </button>
-                    ))}
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                        />
+                      </svg>
+                    </button>
+
+                    {expanded && (
+                      <div className="bg-slate-950">
+                        {cuotas.map((c, idx) => (
+                          <button
+                            key={`${c.dias}-${c.diaria}`}
+                            onClick={() => {
+                              setSelectedIdx(idx);
+                              setExpanded(false);
+                            }}
+                            className={`w-full flex items-center justify-between p-4 border-t border-slate-700 transition text-left ${
+                              selectedIdx === idx
+                                ? "bg-emerald-600/20 border-emerald-500/30"
+                                : "hover:bg-slate-900"
+                            }`}
+                          >
+                            <div className="flex-1">
+                              <p className="font-semibold text-lg">{c.dias} cuotas de {formatMoney(c.diaria)}</p>
+                              <p className="text-sm text-slate-400 mt-1">
+                                Total: {formatMoney(c.diaria * c.dias)}
+                              </p>
+                            </div>
+                            {selectedIdx === idx && (
+                              <div className="ml-4 flex-shrink-0 rounded-full bg-emerald-500/15 p-2 text-emerald-400">
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                                </svg>
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div className="mb-8 rounded-lg border border-slate-700 bg-slate-900/40 p-4 text-slate-300">
+                  Este producto no tiene planes de cuotas cargados todavia. Podes consultarnos por WhatsApp para recibir opciones de pago.
+                </div>
+              )}
 
               {/* Botón WhatsApp */}
               <a

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "fix:images:dry": "node scripts/fix-product-images.mjs --dry-run",
+    "fix:images": "node scripts/fix-product-images.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",

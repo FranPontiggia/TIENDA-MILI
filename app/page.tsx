@@ -1,10 +1,12 @@
 ﻿import Link from "next/link";
+import Image from "next/image";
 import { categorias } from "@/data/categoria";
-import { getProductos } from "@/data/productos";
+import { getProductosDestacados } from "@/data/productos";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const productos = await getProductos();
-  const destacados = productos.slice(0, 6);
+  const destacados = await getProductosDestacados(6);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -57,18 +59,24 @@ export default async function Home() {
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {destacados.map((producto) => {
               const primeraCuota = producto.cuotas?.[0];
+              const isCafetera = producto.nombre.toLowerCase().includes("cafetera");
 
               return (
                 <Link
                   key={producto.id}
                   href={`/producto/${producto.id}`}
-                  className="group overflow-hidden rounded-[28px] border border-slate-700/70 bg-slate-900/80 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
+                  className={`group overflow-hidden rounded-[28px] border shadow-xl shadow-black/20 transition hover:-translate-y-1 ${
+                    isCafetera
+                      ? "border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 to-slate-900/90 hover:border-emerald-400/70"
+                      : "border-slate-700/70 bg-slate-900/80 hover:border-emerald-400/40"
+                  }`}
                 >
                   <div className="relative h-64 w-full overflow-hidden bg-slate-900">
-                    <img
+                    <Image
                       src={producto.imagen}
                       alt={producto.nombre}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
                   </div>

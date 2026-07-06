@@ -28,6 +28,28 @@ npm run dev
 
 Abre http://localhost:3000 para ver la tienda.
 
+## Corregir rutas de imagen en Supabase
+
+Si algun producto tiene rutas mal cargadas (comillas, espacios extra o sin extension), podes usar:
+
+```bash
+npm run fix:images:dry
+```
+
+Ese comando solo muestra cambios (no actualiza).
+
+Para aplicar la correccion en Supabase:
+
+```bash
+npm run fix:images
+```
+
+Para corregir solo productos que coincidan por nombre:
+
+```bash
+node scripts/fix-product-images.mjs --only=cubiertos
+```
+
 ## Estructura principal
 
 - app/: páginas y vistas de la tienda

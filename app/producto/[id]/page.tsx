@@ -1,10 +1,9 @@
-import { getProductos } from "@/data/productos";
+import { getProductoById } from "@/data/productos";
 import ClientProductDetail from "./ClientProductDetail";
-
+export const dynamic = "force-dynamic";
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const productos = await getProductos();
-  const producto = productos.find((p) => p.id == Number(id));
+  const producto = await getProductoById(Number(id));
 
   if (!producto) {
     return (

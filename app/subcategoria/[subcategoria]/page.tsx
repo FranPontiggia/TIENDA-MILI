@@ -1,15 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getProductos } from "@/data/productos";
+import { getProductosBySubcategoriaPaginated } from "@/data/productos";
+import { formatSubcategoriaLabel } from "@/data/catalogo";
 
-export default async function SubcategoriaPage({ params }: { params: Promise<{ subcategoria: string }> }) {
+export const dynamic = "force-dynamic";
+
+function parsePage(value: string | undefined): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 1) return 1;
+  return Math.floor(parsed);
+}
+
+export default async function SubcategoriaPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ subcategoria: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { subcategoria } = await params;
+  const { page } = await searchParams;
   const decodedSubcategoria = decodeURIComponent(subcategoria);
-  const productos = await getProductos();
-
-  const filtrados = productos.filter(
-    (p) => p.subcategoria.toLowerCase() === decodedSubcategoria.toLowerCase()
+  const currentPage = parsePage(page);
+  const { productos: filtrados, total, totalPages, page: safePage } = await getProductosBySubcategoriaPaginated(
+    decodedSubcategoria,
+    currentPage,
+    24
   );
+
+  const displaySubcategoria = formatSubcategoriaLabel(decodedSubcategoria);
+  const hasPrev = safePage > 1;
+  const hasNext = safePage < totalPages;
+  const subcategoriaHref = `/subcategoria/${encodeURIComponent(decodedSubcategoria)}`;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-black text-white">
@@ -28,10 +50,13 @@ export default async function SubcategoriaPage({ params }: { params: Promise<{ s
             </Link>
 
             <h1 className="text-4xl sm:text-5xl font-bold capitalize mb-2">
-              {decodedSubcategoria}
+              {displaySubcategoria}
             </h1>
             <p className="text-slate-400">
-              {filtrados.length} producto{filtrados.length !== 1 ? "s" : ""} disponible{filtrados.length !== 1 ? "s" : ""}
+              {total} producto{total !== 1 ? "s" : ""} disponible{total !== 1 ? "s" : ""}
+            </p>
+            <p className="mt-2 text-sm text-slate-500">
+              Pagina {safePage} de {totalPages}
             </p>
           </div>
 
@@ -81,6 +106,36 @@ export default async function SubcategoriaPage({ params }: { params: Promise<{ s
               <p className="text-slate-400 text-lg">
                 No hay productos en esta subcategoría todavía
               </p>
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="mt-10 flex items-center justify-center gap-3">
+              <Link
+                href={hasPrev ? `${subcategoriaHref}?page=${safePage - 1}` : subcategoriaHref}
+                aria-disabled={!hasPrev}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  hasPrev
+                    ? "bg-slate-800 text-white hover:bg-slate-700"
+                    : "cursor-not-allowed bg-slate-900 text-slate-500"
+                }`}
+              >
+                Anterior
+              </Link>
+              <span className="rounded-full bg-slate-900 px-4 py-2 text-sm text-slate-300">
+                {safePage} / {totalPages}
+              </span>
+              <Link
+                href={hasNext ? `${subcategoriaHref}?page=${safePage + 1}` : `${subcategoriaHref}?page=${safePage}`}
+                aria-disabled={!hasNext}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  hasNext
+                    ? "bg-emerald-600 text-white hover:bg-emerald-500"
+                    : "cursor-not-allowed bg-slate-900 text-slate-500"
+                }`}
+              >
+                Siguiente
+              </Link>
             </div>
           )}
         </div>

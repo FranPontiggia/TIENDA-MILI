@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "nombre": "Centro de planchado",
+    "precio": 140000,
+    "descripcion": "Centro de planchado, ideal para diferenciar ropa pendiente de planchado con la ya planchada.",
+    "color": "Blanco",
+    "categoria": "Hogar",
+    "subcategoria": "Cuidado del hogar",
+    "imagen": "/imagen/centro-planchado.jpeg",
+    "imagenes": [
+      "/imagen/centro-planchado.jpeg",
+      "/imagen/centro-planchado-2.jpeg",
+      "/imagen/centro-planchado.jpeg"
+    ],
+    "cuotas": [
+      { "dias": 250, "diaria": 1005 },
+      { "dias": 200, "diaria": 1182 },
+      { "dias": 150, "diaria": 1478 },
+      { "dias": 100, "diaria": 1892 }
+    ]
+  },
+  {
+    "id": 2,
+    "nombre": "Cafetera de Filtro Atma",
+    "precio": 45000,
+    "descripcion": "Cafetera de filtro Atma con sistema antigoteo y portafiltro desmontable.",
+    "color": "Blanca",
+    "categoria": "Hogar",
+    "subcategoria": "Electrohogar",
+    "imagen": "/imagen/cafetera.jpeg",
+    "imagenes": [
+      "/imagen/cafetera.jpeg",
+      "/imagen/cafetera-1.jpeg",
+      "/imagen/cafetera-2.jpeg"
+    ],
+    "cuotas": [
+      { "dias": 200, "diaria": 542 },
+      { "dias": 150, "diaria": 678 },
+      { "dias": 100, "diaria": 868 }
+    ]
+  }
+]
