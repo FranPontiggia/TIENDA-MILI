@@ -1,5 +1,5 @@
 ﻿import { productsTable, supabase } from "../lib/supabase";
-import { getSubcategoriaVariants } from "./catalogo";
+import { areSameSubcategoria, getSubcategoriaVariants } from "./catalogo";
 import localProducts from "../products-import.json";
 
 export type Producto = {
@@ -257,7 +257,25 @@ export async function getProductosBySubcategoriaPaginated(
   }
 
   const productos = (data as ProductoRow[] | null | undefined ?? []).map(toProducto).filter((producto) => producto.id > 0);
-  const total = count ?? 0;
+  if (productos.length === 0) {
+    const allProductos = await getProductos();
+    const filtrados = allProductos.filter((producto) => areSameSubcategoria(producto.subcategoria, subcategoria));
+    const total = filtrados.length;
+    const totalPages = Math.max(1, Math.ceil(total / safePageSize));
+    const pageClamped = Math.min(safePage, totalPages);
+    const fallbackStart = (pageClamped - 1) * safePageSize;
+    const fallbackEnd = fallbackStart + safePageSize;
+
+    return {
+      productos: filtrados.slice(fallbackStart, fallbackEnd),
+      total,
+      page: pageClamped,
+      pageSize: safePageSize,
+      totalPages,
+    };
+  }
+
+  const total = count ?? productos.length;
   const totalPages = Math.max(1, Math.ceil(total / safePageSize));
   const pageClamped = Math.min(safePage, totalPages);
 
