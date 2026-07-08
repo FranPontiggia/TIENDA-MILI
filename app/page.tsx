@@ -24,6 +24,15 @@ export default async function Home() {
           <p className="mx-auto mt-5 max-w-3xl text-base sm:text-lg text-slate-300">
             Todo para tu hogar y comercio en cuotas.
           </p>
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/solicitar-efectivo"
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-2 text-sm font-semibold text-emerald-300 transition hover:border-emerald-300/70 hover:bg-emerald-500/20"
+            >
+              Solicitar efectivo
+              <span aria-hidden>↗</span>
+            </Link>
+          </div>
         </header>
 
         <section className="grid gap-6 md:grid-cols-2 mb-16">
