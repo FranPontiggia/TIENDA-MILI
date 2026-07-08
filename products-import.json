@@ -2,11 +2,11 @@
   {
     "id": 1,
     "nombre": "Centro de planchado",
-    "precio": 140000,
-    "descripcion": "Centro de planchado, ideal para diferenciar ropa pendiente de planchado con la ya planchada.",
+    "precio": 0,
+    "descripcion": "Centro de planchado .....",
     "color": "Blanco",
     "categoria": "Hogar",
-    "subcategoria": "Cuidado del hogar",
+    "subcategoria": "Cuidado del Hogar",
     "imagen": "/imagen/centro-planchado.jpeg",
     "imagenes": [
       "/imagen/centro-planchado.jpeg",
@@ -14,30 +14,136 @@
       "/imagen/centro-planchado.jpeg"
     ],
     "cuotas": [
-      { "dias": 250, "diaria": 1005 },
-      { "dias": 200, "diaria": 1182 },
-      { "dias": 150, "diaria": 1478 },
-      { "dias": 100, "diaria": 1892 }
+      {
+        "dias": 250,
+        "diaria": 1005
+      },
+      {
+        "dias": 200,
+        "diaria": 1182
+      },
+      {
+        "dias": 150,
+        "diaria": 1478
+      },
+      {
+        "dias": 100,
+        "diaria": 1892
+      }
     ]
   },
   {
     "id": 2,
     "nombre": "Cafetera de Filtro Atma",
-    "precio": 45000,
-    "descripcion": "Cafetera de filtro Atma con sistema antigoteo y portafiltro desmontable.",
+    "precio": 0,
+    "descripcion": "Marca Atma\nCapacidad 1.25 lts\npotencia 850 W\nTimer No\nTipo de café Molido\nOrigen Argentina",
     "color": "Blanca",
     "categoria": "Hogar",
     "subcategoria": "Electrohogar",
     "imagen": "/imagen/cafetera.jpeg",
     "imagenes": [
       "/imagen/cafetera.jpeg",
-      "/imagen/cafetera-1.jpeg",
-      "/imagen/cafetera-2.jpeg"
+      "/imagen/cafetera-1.jpeg"
     ],
     "cuotas": [
-      { "dias": 200, "diaria": 542 },
-      { "dias": 150, "diaria": 678 },
-      { "dias": 100, "diaria": 868 }
+      {
+        "dias": 200,
+        "diaria": 542
+      },
+      {
+        "dias": 150,
+        "diaria": 678
+      },
+      {
+        "dias": 100,
+        "diaria": 868
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "nombre": "Cubiertos de Madera x 15 piezas. Dinamyc",
+    "precio": 0,
+    "descripcion": "Contiene:\n6 cuchillos de asado 5¨\n6 tenedores de mesa\n1 cuchilla asador de 8¨\n1 tenedor trinchante\n1 pinza",
+    "color": "",
+    "categoria": "Hogar",
+    "subcategoria": "Bazar",
+    "imagen": "/imagen/cubiertos madera 1.jpeg",
+    "imagenes": [
+      "/imagen/cubiertos madera.jpeg",
+      "/imagen/cubiertos madera 2.jpeg",
+      "/imagen/cubiertos madera 1.jpeg"
+    ],
+    "cuotas": [
+      {
+        "dias": 200,
+        "diaria": 904
+      },
+      {
+        "dias": 150,
+        "diaria": 1131
+      },
+      {
+        "dias": 100,
+        "diaria": 1447
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "nombre": "Equipo Matero con canasto simple M.Joven",
+    "precio": 0,
+    "descripcion": "Termo, mate y recipientes almacenadores + Canasto. \nDe plástico duradero.",
+    "color": "",
+    "categoria": "Hogar",
+    "subcategoria": "Bazar",
+    "imagen": "/imagen/equipo mate.jpeg",
+    "imagenes": [
+      "/imagen/equipo mate.jpeg",
+      "/imagen/equipo mate 1.jpeg"
+    ],
+    "cuotas": [
+      {
+        "dias": 200,
+        "diaria": 778
+      },
+      {
+        "dias": 150,
+        "diaria": 973
+      },
+      {
+        "dias": 100,
+        "diaria": 1246
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "nombre": "Especiero Giratorio x 12 frascos",
+    "precio": 125000,
+    "descripcion": "Especiero giratorio de acero inoxidable con 12 frascos de vidrio. Su base giratoria de 360° permite acceder fácilmente a cada especia, manteniendo la cocina organizada y ahorrando espacio. Práctico, elegante y resistente, es ideal para tener tus condimentos siempre al alcance de la mano.",
+    "color": "",
+    "categoria": "Hogar",
+    "subcategoria": "Bazar",
+    "imagen": "/imagen/condimentero.webp",
+    "imagenes": [
+      "/imagen/condimentero.webp",
+      "/imagen/condimentero-1.webp",
+      "/imagen/condimentero-2.webp"
+    ],
+    "cuotas": [
+      {
+        "dias": 200,
+        "diaria": 461
+      },
+      {
+        "dias": 150,
+        "diaria": 577
+      },
+      {
+        "dias": 100,
+        "diaria": 739
+      }
     ]
   }
 ]

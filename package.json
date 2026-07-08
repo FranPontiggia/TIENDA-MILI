@@ -7,18 +7,24 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "export:products:dry": "node scripts/export-products.mjs --dry-run",
+    "export:products": "node scripts/export-products.mjs",
+    "sync:repo": "node scripts/export-products.mjs",
     "import:products:dry": "node scripts/import-products.mjs --dry-run",
     "import:products": "node scripts/import-products.mjs",
     "sync:supabase:dry": "node scripts/import-products.mjs --dry-run && node scripts/fix-product-images.mjs --dry-run",
     "sync:supabase": "node scripts/import-products.mjs && node scripts/fix-product-images.mjs",
     "fix:images:dry": "node scripts/fix-product-images.mjs --dry-run",
-    "fix:images": "node scripts/fix-product-images.mjs"
+    "fix:images": "node scripts/fix-product-images.mjs",
+    "capturas:process": "node scripts/process-capturas.mjs",
+    "capturas:process:dry": "node scripts/process-capturas.mjs --dry-run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",
     "next": "16.2.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

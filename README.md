@@ -76,6 +76,57 @@ Simulacion de sincronizacion completa:
 npm run sync:supabase:dry
 ```
 
+## Exportar productos desde Supabase al repo
+
+Si queres que GitHub tenga una copia de los productos actuales de Supabase, usa:
+
+```bash
+npm run sync:repo
+```
+
+Para probar sin escribir el archivo:
+
+```bash
+npm run export:products:dry
+```
+
+Este flujo actualiza `products-import.json` con los productos remotos, para mantener sincronizado el fallback local.
+
+## Procesar capturas de celular
+
+Si guardas capturas en `capturas/`, podes recortarlas y convertirlas a WebP automaticamente:
+
+```bash
+npm run capturas:process
+```
+
+Para simular sin escribir archivos:
+
+```bash
+npm run capturas:process:dry
+```
+
+Configura el recorte en `scripts/process-capturas.mjs` con estas variables:
+
+- `CROP_TOP`
+- `CROP_BOTTOM`
+- `CROP_LEFT`
+- `CROP_RIGHT`
+
+Para usar nombres personalizados, crea `capturas/nombres-map.json` con pares `archivo-original -> nombre-salida`.
+
+Ejemplo:
+
+```json
+{
+	"WhatsApp Image 2026-07-08 at 12.46.35.webp": "equipo-matero-1",
+	"WhatsApp Image 2026-07-08 at 12.46.35 (1).jpg": "equipo-matero-2",
+	"foto-123": "mate-accesorios"
+}
+```
+
+Si no existe este archivo, el script usa nombres automaticos limpios.
+
 ## Estructura principal
 
 - app/: páginas y vistas de la tienda

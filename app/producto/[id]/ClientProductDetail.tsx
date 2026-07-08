@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Producto } from "@/data/productos";
@@ -31,10 +31,11 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
       : `Hola, quiero consultar por ${producto.nombre}`
   )}`;
 
-  useEffect(() => {
+  function selectImage(index: number) {
+    setActiveImageIdx(index);
     setManualZoom(false);
     setZoomOrigin("50% 50%");
-  }, [activeImageIdx]);
+  }
 
   function handleImagePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (!manualZoom) return;
@@ -103,7 +104,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                     <div className="flex items-center justify-between gap-3 mb-3">
                       <button
                         type="button"
-                        onClick={() => setActiveImageIdx((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+                        onClick={() => selectImage(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1)}
                         className="rounded-full border border-slate-600 px-3 py-1 text-sm text-slate-200 hover:bg-slate-800"
                       >
                         ← Anterior
@@ -113,7 +114,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                       </p>
                       <button
                         type="button"
-                        onClick={() => setActiveImageIdx((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+                        onClick={() => selectImage(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1)}
                         className="rounded-full border border-slate-600 px-3 py-1 text-sm text-slate-200 hover:bg-slate-800"
                       >
                         Siguiente →
@@ -133,7 +134,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                         <button
                           key={`${img}-${idx}`}
                           type="button"
-                          onClick={() => setActiveImageIdx(idx)}
+                          onClick={() => selectImage(idx)}
                           className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border ${
                             activeImageIdx === idx ? "border-emerald-400" : "border-slate-700"
                           }`}
