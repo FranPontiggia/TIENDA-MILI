@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Producto } from "@/data/productos";
@@ -11,6 +11,9 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   const [expanded, setExpanded] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [manualZoom, setManualZoom] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
+  const lastTouchTimestampRef = useRef(0);
 
   const cuotas = producto.cuotas || [];
   const hasCuotas = cuotas.length > 0;
@@ -19,6 +22,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     ? producto.imagenes
     : [producto.imagen]).filter(Boolean);
   const currentImage = images[activeImageIdx] || producto.imagen;
+  const zoomActive = manualZoom;
 
   const selected = cuotas[selectedIdx];
   const whatsapp = `https://wa.me/5492983541686?text=${encodeURIComponent(
@@ -26,6 +30,34 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
       ? `Hola, quiero comprar ${producto.nombre} - Plan: ${selected.dias} cuotas a $${selected.diaria} por día`
       : `Hola, quiero consultar por ${producto.nombre}`
   )}`;
+
+  useEffect(() => {
+    setManualZoom(false);
+    setZoomOrigin("50% 50%");
+  }, [activeImageIdx]);
+
+  function handleImagePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (!manualZoom) return;
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+    const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+    setZoomOrigin(`${x}% ${y}%`);
+  }
+
+  function handleImagePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "touch") return;
+
+    const now = Date.now();
+    const tapDelta = now - lastTouchTimestampRef.current;
+    if (tapDelta > 0 && tapDelta < 300) {
+      setManualZoom((value) => !value);
+      lastTouchTimestampRef.current = 0;
+      return;
+    }
+
+    lastTouchTimestampRef.current = now;
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-black text-white">
@@ -46,13 +78,24 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
             {/* Imagen */}
             <div className="flex items-start">
               <div className="w-full rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
-                <div className="aspect-square relative">
+                <div
+                  className="aspect-square relative overflow-hidden"
+                  onPointerMove={handleImagePointerMove}
+                  onPointerDown={handleImagePointerDown}
+                >
                   <Image
                     src={currentImage}
                     alt={producto.nombre}
                     fill
-                    className="object-cover"
+                    sizes="(min-width: 1024px) 520px, 100vw"
+                    quality={72}
+                    priority
+                    style={{ transformOrigin: zoomOrigin }}
+                    className={`object-cover transition duration-200 ${zoomActive ? "scale-[2.2]" : "scale-100"}`}
                   />
+                  <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
+                    {zoomActive ? "Zoom x2 activo" : "Activá zoom o hacé doble toque"}
+                  </div>
                 </div>
 
                 {images.length > 1 && (
@@ -77,6 +120,14 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                       </button>
                     </div>
 
+                    <button
+                      type="button"
+                      onClick={() => setManualZoom((value) => !value)}
+                      className="mb-3 rounded-full border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-800"
+                    >
+                      {manualZoom ? "Desactivar zoom" : "Activar zoom"}
+                    </button>
+
                     <div className="flex gap-2 overflow-x-auto">
                       {images.map((img, idx) => (
                         <button
@@ -87,7 +138,14 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                             activeImageIdx === idx ? "border-emerald-400" : "border-slate-700"
                           }`}
                         >
-                          <Image src={img} alt={`${producto.nombre} ${idx + 1}`} fill className="object-cover" />
+                          <Image
+                            src={img}
+                            alt={`${producto.nombre} ${idx + 1}`}
+                            fill
+                            sizes="64px"
+                            quality={50}
+                            className="object-cover"
+                          />
                         </button>
                       ))}
                     </div>

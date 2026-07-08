@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { subcategorias } from "@/data/categoria";
+import { subcategorias } from "@/data/subcategoria";
 import { formatSubcategoriaLabel, normalizeCategoriaName } from "@/data/catalogo";
 
 export default async function CategoriaPage({ params }: { params: Promise<{ categoria: string }> }) {

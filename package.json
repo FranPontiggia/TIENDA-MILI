@@ -7,6 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "import:products:dry": "node scripts/import-products.mjs --dry-run",
+    "import:products": "node scripts/import-products.mjs",
+    "sync:supabase:dry": "node scripts/import-products.mjs --dry-run && node scripts/fix-product-images.mjs --dry-run",
+    "sync:supabase": "node scripts/import-products.mjs && node scripts/fix-product-images.mjs",
     "fix:images:dry": "node scripts/fix-product-images.mjs --dry-run",
     "fix:images": "node scripts/fix-product-images.mjs"
   },

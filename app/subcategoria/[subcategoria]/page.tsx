@@ -75,6 +75,8 @@ export default async function SubcategoriaPage({
                       src={p.imagen}
                       alt={p.nombre}
                       fill
+                      sizes="(min-width: 640px) 112px, 96px"
+                      quality={65}
                       className="object-cover transition duration-500 group-hover:scale-105"
                     />
                   </div>

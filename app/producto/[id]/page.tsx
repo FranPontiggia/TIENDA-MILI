@@ -1,16 +1,14 @@
 import { getProductoById } from "@/data/productos";
+import { notFound } from "next/navigation";
 import ClientProductDetail from "./ClientProductDetail";
 export const dynamic = "force-dynamic";
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const producto = await getProductoById(Number(id));
+  const parsedId = Number(id);
+  const producto = await getProductoById(parsedId);
 
   if (!producto) {
-    return (
-      <div className="p-10 text-white bg-slate-950 min-h-screen">
-        Producto no encontrado
-      </div>
-    );
+    notFound();
   }
 
   return <ClientProductDetail producto={producto} />;

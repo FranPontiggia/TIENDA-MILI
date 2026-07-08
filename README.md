@@ -50,6 +50,32 @@ Para corregir solo productos que coincidan por nombre:
 node scripts/fix-product-images.mjs --only=cubiertos
 ```
 
+## Importar y sincronizar productos con Supabase
+
+Validar datos sin escribir en la base:
+
+```bash
+npm run import:products:dry
+```
+
+Importar productos:
+
+```bash
+npm run import:products
+```
+
+Sincronizacion completa (importa y luego corrige rutas de imagen):
+
+```bash
+npm run sync:supabase
+```
+
+Simulacion de sincronizacion completa:
+
+```bash
+npm run sync:supabase:dry
+```
+
 ## Estructura principal
 
 - app/: páginas y vistas de la tienda
