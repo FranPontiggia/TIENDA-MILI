@@ -145,5 +145,67 @@
         "diaria": 739
       }
     ]
+  },
+  {
+    "id": 6,
+    "nombre": "Escurridor de platos Family Alum (2 niveles)",
+    "precio": 0,
+    "descripcion": "Escurridor de platos de dos niveles en color negro, ideal para mantener tu vajilla organizada y seca optimizando el espacio de la cocina. Su diseño resistente ofrece gran capacidad para platos, vasos y tazas, con bandeja antigoteo extraíble para mayor comodidad y limpieza.",
+    "color": "Negro",
+    "categoria": "Hogar",
+    "subcategoria": "Bazar",
+    "imagen": "/imagen/escurridor-de-platos.webp",
+    "imagenes": [
+      "/imagen/escurridor-de-platos.webp",
+      "/imagen/escurridor-de-platos-1.webp",
+      "/imagen/escurridor-de-platos-2.webp"
+    ],
+    "cuotas": [
+      {
+        "dias": 200,
+        "diaria": 705
+      },
+      {
+        "dias": 150,
+        "diaria": 882
+      },
+      {
+        "dias": 100,
+        "diaria": 1129
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "nombre": "freidora de aire Easyfryer9000 Telefunken",
+    "precio": 0,
+    "descripcion": "Apta para 6 comensales por su cesta de 9 litros. \nPosee luz interior, potenia de 1800W y 8 programas de cocción. Sistema de circulación 360°. La freidora calienta los alimentos en todas las direcciones logrando un excelente y saludable resultado.",
+    "color": "",
+    "categoria": "Hogar",
+    "subcategoria": "Electrohogar",
+    "imagen": "/imagen/freidora-de-aire.webp",
+    "imagenes": [
+      "/imagen/freidora-de-aire.webp",
+      "/imagen/freidora-de-aire-1.webp",
+      "/imagen/freidora-de-aire-2.webp"
+    ],
+    "cuotas": [
+      {
+        "dias": 250,
+        "diaria": 1399
+      },
+      {
+        "dias": 200,
+        "diaria": 1645
+      },
+      {
+        "dias": 150,
+        "diaria": 2057
+      },
+      {
+        "dias": 100,
+        "diaria": 2633
+      }
+    ]
   }
 ]
