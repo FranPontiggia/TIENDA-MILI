@@ -11,7 +11,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ cate
   );
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-black text-white">
+    <main className="min-h-screen bg-gradient-to-br from-[#24170f] via-[#15100c] to-[#090706] text-white">
       <div className="px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl">
           {/* Header */}

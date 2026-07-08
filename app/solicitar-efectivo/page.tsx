@@ -9,7 +9,7 @@ export default function SolicitarEfectivoPage() {
   const whatsappHref = `https://wa.me/${WHATSAPP_PHONE}?text=${WHATSAPP_MESSAGE}`;
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-gradient-to-br from-[#24170f] via-[#15100c] to-[#090706] text-white">
       <div className="mx-auto max-w-4xl px-6 py-16 sm:px-8 sm:py-24">
         <Link
           href="/"

@@ -13,7 +13,8 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [manualZoom, setManualZoom] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
-  const lastTouchTimestampRef = useRef(0);
+  const touchGestureRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const lastTapTimestampRef = useRef(0);
 
   const cuotas = producto.cuotas || [];
   const hasCuotas = cuotas.length > 0;
@@ -50,19 +51,59 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   function handleImagePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "touch") return;
 
-    const now = Date.now();
-    const tapDelta = now - lastTouchTimestampRef.current;
-    if (tapDelta > 0 && tapDelta < 300) {
-      setManualZoom((value) => !value);
-      lastTouchTimestampRef.current = 0;
+    touchGestureRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      pointerId: event.pointerId,
+    };
+  }
+
+  function handleImagePointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "touch") return;
+
+    const gesture = touchGestureRef.current;
+    touchGestureRef.current = null;
+
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - gesture.x;
+    const deltaY = event.clientY - gesture.y;
+    const isSwipe = Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+
+    if (isSwipe && images.length > 1) {
+      setManualZoom(false);
+      setZoomOrigin("50% 50%");
+
+      if (deltaX < 0) {
+        selectImage(activeImageIdx === images.length - 1 ? 0 : activeImageIdx + 1);
+      } else {
+        selectImage(activeImageIdx === 0 ? images.length - 1 : activeImageIdx - 1);
+      }
+
+      lastTapTimestampRef.current = 0;
       return;
     }
 
-    lastTouchTimestampRef.current = now;
+    const isTap = Math.hypot(deltaX, deltaY) < 12;
+    if (!isTap) return;
+
+    const now = Date.now();
+    const tapDelta = now - lastTapTimestampRef.current;
+    if (tapDelta > 0 && tapDelta < 300) {
+      setManualZoom((value) => !value);
+      lastTapTimestampRef.current = 0;
+      return;
+    }
+
+    lastTapTimestampRef.current = now;
+  }
+
+  function handleImagePointerCancel() {
+    touchGestureRef.current = null;
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-black text-white">
+    <main className="min-h-screen bg-gradient-to-br from-[#24170f] via-[#15100c] to-[#090706] text-white">
       <div className="px-6 py-12 sm:py-16">
         <div className="mx-auto max-w-5xl">
           {/* Back Button */}
@@ -82,8 +123,11 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
               <div className="w-full rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
                 <div
                   className="aspect-square relative overflow-hidden"
+                  style={{ touchAction: "pan-y", userSelect: "none" }}
                   onPointerMove={handleImagePointerMove}
                   onPointerDown={handleImagePointerDown}
+                  onPointerUp={handleImagePointerUp}
+                  onPointerCancel={handleImagePointerCancel}
                 >
                   <Image
                     src={currentImage}
