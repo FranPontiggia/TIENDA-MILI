@@ -25,6 +25,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   const zoomActive = manualZoom;
 
   const selected = cuotas[selectedIdx];
+  const backHref = `/subcategoria/${encodeURIComponent(producto.subcategoria)}`;
   const whatsapp = `https://wa.me/5492983541686?text=${encodeURIComponent(
     hasCuotas && selected
       ? `Hola, quiero comprar ${producto.nombre} - Plan: ${selected.dias} cuotas a $${selected.diaria} por día`
@@ -66,7 +67,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
         <div className="mx-auto max-w-5xl">
           {/* Back Button */}
           <Link 
-            href="/" 
+            href={backHref}
             className="inline-flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition mb-8"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
