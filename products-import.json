@@ -240,5 +240,34 @@
         "diaria": 1023
       }
     ]
+  },
+  {
+    "id": 9,
+    "nombre": "Vaso Six-Pack Noa Burbujas",
+    "precio": 0,
+    "descripcion": "Vasos de vidrio trago largo, con decoración de burbujas",
+    "color": "",
+    "categoria": "Hogar",
+    "subcategoria": "Bazar",
+    "imagen": "/imagen/vasosburbujas.webp",
+    "imagenes": [
+      "/imagen/vasosburbujas.webp",
+      "/imagen/vasos-burbujas-1.webp",
+      "/imagen/vasos-burbujas-2.webp"
+    ],
+    "cuotas": [
+      {
+        "dias": 200,
+        "diaria": 97
+      },
+      {
+        "dias": 150,
+        "diaria": 122
+      },
+      {
+        "dias": 100,
+        "diaria": 156
+      }
+    ]
   }
 ]
