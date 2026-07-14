@@ -17,7 +17,14 @@ Crea un archivo .env.local con:
 NEXT_PUBLIC_SUPABASE_URL=https://TU_URL.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=TU_ANON_KEY
 NEXT_PUBLIC_SUPABASE_PRODUCTS_TABLE=productos
+PRODUCTS_SOURCE=supabase-first
 ```
+
+`PRODUCTS_SOURCE` admite estos valores:
+
+- `supabase-first` (default): usa Supabase y cae al fallback local si falla.
+- `supabase-only`: usa solo Supabase (recomendado en produccion para catalogos grandes).
+- `local-only`: usa solo `products-import.json`.
 
 ## Inicio local
 
@@ -91,6 +98,28 @@ npm run export:products:dry
 ```
 
 Este flujo actualiza `products-import.json` con los productos remotos, para mantener sincronizado el fallback local.
+
+## Produccion para 600+ productos
+
+Para escalar sin depender de sincronizaciones manuales por cada alta:
+
+1. En Vercel (Production), configurar:
+	- `NEXT_PUBLIC_SUPABASE_URL`
+	- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+	- `NEXT_PUBLIC_SUPABASE_PRODUCTS_TABLE`
+	- `PRODUCTS_SOURCE=supabase-only`
+2. Hacer redeploy despues de guardar variables.
+3. Dejar `products-import.json` solo como respaldo (no como fuente principal).
+
+Indices recomendados en Supabase:
+
+```sql
+create index if not exists idx_productos_subcategoria_id
+on productos (subcategoria, id);
+
+create index if not exists idx_productos_id
+on productos (id);
+```
 
 ## Procesar capturas de celular
 

@@ -2,6 +2,8 @@
 import { areSameSubcategoria, getSubcategoriaVariants, normalizeCategoriaName } from "./catalogo";
 import localProducts from "../products-import.json";
 
+type ProductsSourceMode = "supabase-first" | "supabase-only" | "local-only";
+
 export type Producto = {
   id: number;
   nombre: string;
@@ -36,6 +38,40 @@ export type PaginatedProductos = {
   pageSize: number;
   totalPages: number;
 };
+
+function getProductsSourceMode(): ProductsSourceMode {
+  const source = (process.env.PRODUCTS_SOURCE ?? "supabase-first").toLowerCase().trim();
+
+  if (source === "supabase-only" || source === "local-only") {
+    return source;
+  }
+
+  return "supabase-first";
+}
+
+const productsSourceMode = getProductsSourceMode();
+
+function isSupabaseOnlyMode(): boolean {
+  return productsSourceMode === "supabase-only";
+}
+
+function isLocalOnlyMode(): boolean {
+  return productsSourceMode === "local-only";
+}
+
+function normalizeCategoriaLabel(value: string): string {
+  const normalized = normalizeCategoriaName(value);
+
+  if (normalized === "hogar") return "Hogar";
+  if (normalized === "comercio") return "Comercio";
+  return value;
+}
+
+function getSupabaseRequiredError(context: string): Error {
+  return new Error(
+    `${context}: PRODUCTS_SOURCE=supabase-only requiere NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY validas.`
+  );
+}
 
 function toString(value: unknown): string {
   if (typeof value !== "string") return "";
@@ -95,7 +131,7 @@ function toProducto(row: ProductoRow): Producto {
     precio: toNumber(record.precio),
     descripcion: toString(record.descripcion),
     color: toString(record.color),
-    categoria: normalizeCategoriaName(toString(record.categoria)),
+    categoria: normalizeCategoriaLabel(toString(record.categoria)),
     subcategoria: toString(record.subcategoria ?? record.subcategoría),
     imagen: normalizeImagePath(record.imagen),
     imagenes: toStringArray(record.imagenes),
@@ -120,7 +156,15 @@ function getLocalProductos(): Producto[] {
 }
 
 export async function getProductos(): Promise<Producto[]> {
+  if (isLocalOnlyMode()) {
+    return getLocalProductos();
+  }
+
   if (!supabase) {
+    if (isSupabaseOnlyMode()) {
+      throw getSupabaseRequiredError("getProductos");
+    }
+
     return getLocalProductos();
   }
 
@@ -130,6 +174,10 @@ export async function getProductos(): Promise<Producto[]> {
     .order("id", { ascending: true });
 
   if (error) {
+    if (isSupabaseOnlyMode()) {
+      throw new Error(`getProductos: no se pudo leer Supabase (${error.message}).`);
+    }
+
     console.error("Error al obtener productos desde Supabase:", error.message);
     return getLocalProductos();
   }
@@ -140,7 +188,16 @@ export async function getProductos(): Promise<Producto[]> {
 export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
   const safeLimit = Math.max(1, Math.min(Math.floor(limit), 24));
 
+  if (isLocalOnlyMode()) {
+    const productos = await getProductos();
+    return productos.slice(0, safeLimit);
+  }
+
   if (!supabase) {
+    if (isSupabaseOnlyMode()) {
+      throw getSupabaseRequiredError("getProductosDestacados");
+    }
+
     const productos = await getProductos();
     return productos.slice(0, safeLimit);
   }
@@ -152,6 +209,10 @@ export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
     .range(0, safeLimit - 1);
 
   if (error) {
+    if (isSupabaseOnlyMode()) {
+      throw new Error(`getProductosDestacados: no se pudo leer Supabase (${error.message}).`);
+    }
+
     console.error("Error al obtener productos destacados:", error.message);
     const productos = await getProductos();
     return productos.slice(0, safeLimit);
@@ -163,7 +224,16 @@ export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
 export async function getProductoById(id: number): Promise<Producto | null> {
   if (!Number.isFinite(id) || id <= 0) return null;
 
+  if (isLocalOnlyMode()) {
+    const productos = await getProductos();
+    return productos.find((producto) => producto.id === id) ?? null;
+  }
+
   if (!supabase) {
+    if (isSupabaseOnlyMode()) {
+      throw getSupabaseRequiredError("getProductoById");
+    }
+
     const productos = await getProductos();
     return productos.find((producto) => producto.id === id) ?? null;
   }
@@ -171,6 +241,10 @@ export async function getProductoById(id: number): Promise<Producto | null> {
   const { data, error } = await supabase.from(productsTable).select("*").eq("id", id).maybeSingle();
 
   if (error) {
+    if (isSupabaseOnlyMode()) {
+      throw new Error(`getProductoById: no se pudo leer Supabase (${error.message}).`);
+    }
+
     console.error(`Error al obtener producto ${id}:`, error.message);
     const productos = await getProductos();
     return productos.find((producto) => producto.id === id) ?? null;
@@ -190,7 +264,33 @@ export async function getProductosBySubcategoriaPaginated(
   const safePage = sanitizePage(page);
   const safePageSize = sanitizePageSize(pageSize);
 
+  if (isLocalOnlyMode()) {
+    const productos = await getProductos();
+    const variants = getSubcategoriaVariants(subcategoria);
+    const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
+    const filtrados = productos.filter((producto) =>
+      normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
+    );
+    const total = filtrados.length;
+    const totalPages = Math.max(1, Math.ceil(total / safePageSize));
+    const pageClamped = Math.min(safePage, totalPages);
+    const start = (pageClamped - 1) * safePageSize;
+    const end = start + safePageSize;
+
+    return {
+      productos: filtrados.slice(start, end),
+      total,
+      page: pageClamped,
+      pageSize: safePageSize,
+      totalPages,
+    };
+  }
+
   if (!supabase) {
+    if (isSupabaseOnlyMode()) {
+      throw getSupabaseRequiredError("getProductosBySubcategoriaPaginated");
+    }
+
     const productos = await getProductos();
     const variants = getSubcategoriaVariants(subcategoria);
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
@@ -235,6 +335,10 @@ export async function getProductosBySubcategoriaPaginated(
   const { data, error, count } = queryResult;
 
   if (error) {
+    if (isSupabaseOnlyMode()) {
+      throw new Error(`getProductosBySubcategoriaPaginated: no se pudo leer Supabase (${error.message}).`);
+    }
+
     console.error("Error al obtener productos paginados por subcategoria:", error.message);
     const productos = await getProductos();
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
