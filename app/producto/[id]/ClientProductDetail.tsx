@@ -11,10 +11,15 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   const [expanded, setExpanded] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
-  const [manualZoom, setManualZoom] = useState(false);
+  const [zoomScale, setZoomScale] = useState(1);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
-  const touchGestureRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const touchGestureRef = useRef<Map<number, { x: number; y: number }>>(new Map());
+  const pinchStartRef = useRef<{
+    distance: number;
+    scale: number;
+  } | null>(null);
   const lastTapTimestampRef = useRef(0);
+  const lastTapPointRef = useRef<{ x: number; y: number } | null>(null);
 
   const cuotas = producto.cuotas || [];
   const hasCuotas = cuotas.length > 0;
@@ -23,7 +28,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     ? producto.imagenes
     : [producto.imagen]).filter(Boolean);
   const currentImage = images[activeImageIdx] || producto.imagen;
-  const zoomActive = manualZoom;
+  const zoomActive = zoomScale > 1.01;
 
   const selected = cuotas[selectedIdx];
   const backHref = `/subcategoria/${encodeURIComponent(producto.subcategoria)}`;
@@ -35,43 +40,91 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
 
   function selectImage(index: number) {
     setActiveImageIdx(index);
-    setManualZoom(false);
+    setZoomScale(1);
     setZoomOrigin("50% 50%");
+    pinchStartRef.current = null;
   }
 
   function handleImagePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (!manualZoom) return;
+    if (event.pointerType !== "touch") return;
 
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / bounds.width) * 100;
-    const y = ((event.clientY - bounds.top) / bounds.height) * 100;
-    setZoomOrigin(`${x}% ${y}%`);
+    const pointers = touchGestureRef.current;
+    const currentPointer = pointers.get(event.pointerId);
+    if (!currentPointer) return;
+
+    currentPointer.x = event.clientX;
+    currentPointer.y = event.clientY;
+
+    if (pointers.size >= 2) {
+      const pointerValues = Array.from(pointers.values());
+      const [first, second] = pointerValues;
+      const distance = Math.hypot(second.x - first.x, second.y - first.y);
+      const start = pinchStartRef.current;
+
+      if (!start) {
+        pinchStartRef.current = {
+          distance: distance || 1,
+          scale: zoomScale,
+        };
+        return;
+      }
+
+      const nextScale = Math.min(Math.max(start.scale * (distance / start.distance), 1), 4);
+      const midpointX = (first.x + second.x) / 2;
+      const midpointY = (first.y + second.y) / 2;
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const x = ((midpointX - bounds.left) / bounds.width) * 100;
+      const y = ((midpointY - bounds.top) / bounds.height) * 100;
+
+      setZoomScale(nextScale);
+      setZoomOrigin(`${x}% ${y}%`);
+      return;
+    }
+
+    if (zoomScale <= 1) {
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+      const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+      setZoomOrigin(`${x}% ${y}%`);
+    }
   }
 
   function handleImagePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "touch") return;
 
-    touchGestureRef.current = {
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    touchGestureRef.current.set(event.pointerId, {
       x: event.clientX,
       y: event.clientY,
-      pointerId: event.pointerId,
-    };
+    });
+
+    if (touchGestureRef.current.size === 2) {
+      pinchStartRef.current = {
+        distance: 1,
+        scale: zoomScale,
+      };
+    }
   }
 
   function handleImagePointerUp(event: React.PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "touch") return;
 
-    const gesture = touchGestureRef.current;
-    touchGestureRef.current = null;
+    const gesture = touchGestureRef.current.get(event.pointerId);
+    touchGestureRef.current.delete(event.pointerId);
 
-    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    if (!gesture) return;
+
+    if (touchGestureRef.current.size < 2) {
+      pinchStartRef.current = null;
+    }
 
     const deltaX = event.clientX - gesture.x;
     const deltaY = event.clientY - gesture.y;
     const isSwipe = Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
 
-    if (isSwipe && images.length > 1) {
-      setManualZoom(false);
+    if (isSwipe && images.length > 1 && touchGestureRef.current.size === 0) {
+      setZoomScale(1);
       setZoomOrigin("50% 50%");
 
       if (deltaX < 0) {
@@ -85,21 +138,30 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     }
 
     const isTap = Math.hypot(deltaX, deltaY) < 12;
-    if (!isTap) return;
+    if (!isTap || touchGestureRef.current.size > 0) return;
 
     const now = Date.now();
     const tapDelta = now - lastTapTimestampRef.current;
     if (tapDelta > 0 && tapDelta < 300) {
-      setManualZoom((value) => !value);
+      setZoomScale((value) => (value > 1 ? 1 : 2.2));
+      if (lastTapPointRef.current) {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        const x = ((lastTapPointRef.current.x - bounds.left) / bounds.width) * 100;
+        const y = ((lastTapPointRef.current.y - bounds.top) / bounds.height) * 100;
+        setZoomOrigin(`${x}% ${y}%`);
+      }
       lastTapTimestampRef.current = 0;
+      lastTapPointRef.current = null;
       return;
     }
 
     lastTapTimestampRef.current = now;
+    lastTapPointRef.current = { x: event.clientX, y: event.clientY };
   }
 
   function handleImagePointerCancel() {
-    touchGestureRef.current = null;
+    touchGestureRef.current.clear();
+    pinchStartRef.current = null;
   }
 
   return (
@@ -123,7 +185,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
               <div className="w-full rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
                 <div
                   className="aspect-square relative overflow-hidden"
-                  style={{ touchAction: "pan-y", userSelect: "none" }}
+                  style={{ touchAction: "none", userSelect: "none" }}
                   onPointerMove={handleImagePointerMove}
                   onPointerDown={handleImagePointerDown}
                   onPointerUp={handleImagePointerUp}
@@ -137,10 +199,10 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                     quality={72}
                     priority
                     style={{ transformOrigin: zoomOrigin }}
-                    className={`object-cover transition duration-200 ${zoomActive ? "scale-[2.2]" : "scale-100"}`}
+                    className={`object-cover transition duration-200 ${zoomActive ? "scale-[var(--zoom-scale)]" : "scale-100"}`}
                   />
                   <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
-                    {zoomActive ? "Zoom x2 activo" : "Activá zoom o hacé doble toque"}
+                    {zoomActive ? `Zoom ${zoomScale.toFixed(1)}x activo` : "Hacé doble toque o abrí los dedos"}
                   </div>
                 </div>
 
@@ -168,10 +230,13 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
 
                     <button
                       type="button"
-                      onClick={() => setManualZoom((value) => !value)}
+                      onClick={() => {
+                        setZoomScale((value) => (value > 1 ? 1 : 2.2));
+                        setZoomOrigin("50% 50%");
+                      }}
                       className="mb-3 rounded-full border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-800"
                     >
-                      {manualZoom ? "Desactivar zoom" : "Activar zoom"}
+                      {zoomActive ? "Desactivar zoom" : "Activar zoom"}
                     </button>
 
                     <div className="flex gap-2 overflow-x-auto">
