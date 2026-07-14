@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Producto } from "@/data/productos";
+import BackToPreviousButton from "@/app/components/BackToPreviousButton";
 
 const formatMoney = (v: number) => `$${v.toLocaleString("es-AR")}`;
 
@@ -31,7 +32,6 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
   const zoomActive = zoomScale > 1.01;
 
   const selected = cuotas[selectedIdx];
-  const backHref = `/subcategoria/${encodeURIComponent(producto.subcategoria)}`;
   const whatsapp = `https://wa.me/5492983541686?text=${encodeURIComponent(
     hasCuotas && selected
       ? `Hola, quiero comprar ${producto.nombre} - Plan: ${selected.dias} cuotas a $${selected.diaria} por día`
@@ -178,15 +178,15 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
       <div className="px-6 py-12 sm:py-16">
         <div className="mx-auto max-w-5xl">
           {/* Back Button */}
-          <Link 
-            href={backHref}
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition mb-8"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Volver
-          </Link>
+          <div className="mb-8 flex items-center gap-3">
+            <BackToPreviousButton className="inline-flex items-center gap-2 text-slate-400 transition hover:text-emerald-400" />
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:border-emerald-500/60 hover:text-emerald-300"
+            >
+              Inicio
+            </Link>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Imagen */}

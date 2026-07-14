@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getProductosBySubcategoriaPaginated } from "@/data/productos";
 import { formatSubcategoriaLabel } from "@/data/catalogo";
+import BackToPreviousButton from "@/app/components/BackToPreviousButton";
 
 export const dynamic = "force-dynamic";
 
@@ -39,15 +40,15 @@ export default async function SubcategoriaPage({
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-12">
-            <Link 
-              href="/" 
-              className="inline-flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition mb-6"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Volver
-            </Link>
+            <div className="mb-6 flex items-center gap-3">
+              <BackToPreviousButton className="inline-flex items-center gap-2 text-slate-400 transition hover:text-emerald-400" />
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:border-emerald-500/60 hover:text-emerald-300"
+              >
+                Inicio
+              </Link>
+            </div>
 
             <h1 className="text-4xl sm:text-5xl font-bold capitalize mb-2">
               {displaySubcategoria}
