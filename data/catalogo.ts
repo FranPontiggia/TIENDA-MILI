@@ -48,5 +48,11 @@ export function getSubcategoriaVariants(value: string): string[] {
 }
 
 export function normalizeCategoriaName(value: string): string {
-  return normalizeWhitespace(value);
+  const normalized = normalizeWhitespace(value);
+
+  if (normalized === "hogat") {
+    return "hogar";
+  }
+
+  return normalized;
 }

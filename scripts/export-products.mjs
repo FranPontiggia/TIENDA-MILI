@@ -34,6 +34,12 @@ function toCleanString(value) {
   return value.trim().replace(/^['"]|['"]$/g, "");
 }
 
+function normalizeCategoria(value) {
+  const cleaned = toCleanString(value);
+  if (cleaned.toLowerCase() === "hogat") return "Hogar";
+  return cleaned;
+}
+
 function toNumber(value, fallback = 0) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return fallback;
@@ -84,7 +90,7 @@ function normalizeProducto(row) {
     precio: toNumber(record.precio, 0),
     descripcion: toCleanString(record.descripcion),
     color: toCleanString(record.color),
-    categoria: VALID_CATEGORIAS.has(categoriaRaw) ? categoriaRaw : "Hogar",
+    categoria: VALID_CATEGORIAS.has(normalizeCategoria(categoriaRaw)) ? normalizeCategoria(categoriaRaw) : "Hogar",
     subcategoria: toCleanString(record.subcategoria ?? record["subcategor\u00eda"]),
     imagen: normalizeImagePath(record.imagen),
     imagenes: normalizeImageArray(record.imagenes),

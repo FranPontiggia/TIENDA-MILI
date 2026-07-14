@@ -1,5 +1,5 @@
 ﻿import { productsTable, supabase } from "../lib/supabase";
-import { areSameSubcategoria, getSubcategoriaVariants } from "./catalogo";
+import { areSameSubcategoria, getSubcategoriaVariants, normalizeCategoriaName } from "./catalogo";
 import localProducts from "../products-import.json";
 
 export type Producto = {
@@ -95,7 +95,7 @@ function toProducto(row: ProductoRow): Producto {
     precio: toNumber(record.precio),
     descripcion: toString(record.descripcion),
     color: toString(record.color),
-    categoria: toString(record.categoria),
+    categoria: normalizeCategoriaName(toString(record.categoria)),
     subcategoria: toString(record.subcategoria ?? record.subcategoría),
     imagen: normalizeImagePath(record.imagen),
     imagenes: toStringArray(record.imagenes),

@@ -35,6 +35,12 @@ function toCleanString(value) {
   return value.trim().replace(/^['"]|['"]$/g, "");
 }
 
+function normalizeCategoria(value) {
+  const normalized = toCleanString(value);
+  if (normalized.toLowerCase() === "hogat") return "Hogar";
+  return normalized;
+}
+
 function toPositiveNumber(value, fallback = 0) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric) || numeric < 0) return fallback;
@@ -121,7 +127,7 @@ const normalizedProducts = payload.map((item, index) => {
   const producto = item ?? {};
   const contextLabel = `Producto ${index + 1}`;
   const nombre = toCleanString(producto.nombre);
-  const categoria = toCleanString(producto.categoria) || "Hogar";
+  const categoria = normalizeCategoria(producto.categoria) || "Hogar";
   const imagen = normalizeImagePath(producto.imagen);
 
   if (!nombre) {
