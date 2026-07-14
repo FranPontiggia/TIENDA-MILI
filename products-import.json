@@ -207,5 +207,38 @@
         "diaria": 2633
       }
     ]
+  },
+  {
+    "id": 8,
+    "nombre": "Juego de Bateria de cocina MYA Antiadherente 5 piezas",
+    "precio": 0,
+    "descripcion": "Set de cocina de aluminio con revestimiento antiadherente Superflon de 7 capas, diseñado para una cocción práctica y una limpieza sencilla.\n\nIncluye:\n\nCacerola de 16 cm con tapa de vidrio (1,4 L)\nCacerola de 18 cm con tapa de vidrio (1,8 L)\nCacerola de 20 cm con asas y tapa de vidrio (2,6 L)\nSartén de 20 cm\nJarro N.º 12 (1,2 L)\n\nCuenta con tapas de vidrio templado con salida de vapor, mangos y asas de baquelita atérmica. Es apta para cocinas a gas, eléctricas y vitrocerámicas, apta para lavavajillas y libre de PFOA.",
+    "color": "",
+    "categoria": "Hogar",
+    "subcategoria": "Bazar",
+    "imagen": "/imagen/juego-de-bateria-ollas.webp",
+    "imagenes": [
+      "/imagen/juego-de-bateria-ollas.webp",
+      "/imagen/juego-de-bateria-ollas-1.webp",
+      "/imagen/juego-de-bateria-ollas-2.webp"
+    ],
+    "cuotas": [
+      {
+        "dias": 250,
+        "diaria": 1021
+      },
+      {
+        "dias": 200,
+        "diaria": 1201
+      },
+      {
+        "dias": 150,
+        "diaria": 1502
+      },
+      {
+        "dias": 100,
+        "diaria": 1023
+      }
+    ]
   }
 ]
