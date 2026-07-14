@@ -85,6 +85,17 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   const hasQuery = normalizedQuery.length > 0;
   const shouldShowDesktopResults = desktopOpen && hasQuery;
 
@@ -198,10 +209,10 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 bg-slate-900/90 text-slate-200 transition hover:border-emerald-400/60 hover:text-emerald-300 md:hidden"
+        className="flex h-10 min-w-[150px] items-center gap-2 rounded-full border border-slate-700 bg-slate-900/90 px-3 text-sm text-slate-300 transition hover:border-emerald-400/60 hover:text-emerald-300 md:hidden"
         aria-label="Abrir buscador"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-5 w-5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-4 w-4 shrink-0">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -209,14 +220,16 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
             d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
           />
         </svg>
+        <span className="truncate text-left">Buscar producto...</span>
       </button>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/70 p-4 md:hidden" onClick={() => setMobileOpen(false)}>
+        <div className="fixed inset-0 z-[60] bg-black/70 md:hidden" onClick={() => setMobileOpen(false)}>
           <div
-            className="mx-auto flex h-full w-full max-w-xl flex-col rounded-3xl border border-slate-700 bg-slate-950"
+            className="absolute inset-x-0 bottom-0 flex max-h-[85dvh] flex-col rounded-t-3xl border border-slate-700 bg-slate-950"
             onClick={(event) => event.stopPropagation()}
           >
+            <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-slate-700" />
             <div className="flex items-center gap-3 border-b border-slate-800 p-4">
               <input
                 autoFocus
@@ -232,6 +245,15 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
                 placeholder="Buscar por nombre, categoría, ID..."
                 className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30"
               />
+              {hasQuery && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="rounded-lg border border-slate-700 px-2 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-300"
+                >
+                  Limpiar
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
@@ -241,11 +263,11 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto p-3">
+            <div className="flex-1 overflow-auto p-3 pb-6">
               {hasQuery ? (
                 filtered.length > 0 ? (
                   <div className="grid gap-2">
-                    <p className="px-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
+                    <p className="px-2 py-1 text-[11px] uppercase tracking-[0.2em] text-slate-500">
                       {filtered.length} resultado{filtered.length === 1 ? "" : "s"}
                     </p>
                     {filtered.map((producto) => (
@@ -256,7 +278,7 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
                           setMobileOpen(false);
                           setQuery("");
                         }}
-                        className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/70 p-3"
+                        className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-3"
                       >
                         <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-white">
                           <Image
