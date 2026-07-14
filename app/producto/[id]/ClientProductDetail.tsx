@@ -45,6 +45,15 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     pinchStartRef.current = null;
   }
 
+  function getPinchDistance() {
+    const pointerValues = Array.from(touchGestureRef.current.values());
+
+    if (pointerValues.length < 2) return 0;
+
+    const [first, second] = pointerValues;
+    return Math.hypot(second.x - first.x, second.y - first.y);
+  }
+
   function handleImagePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "touch") return;
 
@@ -101,7 +110,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
 
     if (touchGestureRef.current.size === 2) {
       pinchStartRef.current = {
-        distance: 1,
+        distance: getPinchDistance() || 1,
         scale: zoomScale,
       };
     }
@@ -198,12 +207,17 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                     sizes="(min-width: 1024px) 520px, 100vw"
                     quality={72}
                     priority
-                    style={{ transformOrigin: zoomOrigin }}
-                    className={`object-cover transition duration-200 ${zoomActive ? "scale-[var(--zoom-scale)]" : "scale-100"}`}
+                    style={{
+                      transformOrigin: zoomOrigin,
+                      transform: `scale(${zoomScale})`,
+                    }}
+                    className="object-cover transition duration-200"
                   />
-                  <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
-                    {zoomActive ? `Zoom ${zoomScale.toFixed(1)}x activo` : "Hacé doble toque o abrí los dedos"}
-                  </div>
+                  {!zoomActive && (
+                    <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
+                      Hacé doble toque o abrí los dedos
+                    </div>
+                  )}
                 </div>
 
                 {images.length > 1 && (
