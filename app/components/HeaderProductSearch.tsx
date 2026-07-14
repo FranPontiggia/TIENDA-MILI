@@ -224,16 +224,9 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
       </button>
 
       {mobileOpen && (
-        <div
-          className="fixed inset-0 z-[60] flex items-end bg-black/70 md:hidden"
-          onClick={() => setMobileOpen(false)}
-        >
-          <div
-            className="flex h-[72dvh] w-full flex-col rounded-t-3xl border border-slate-700 bg-slate-950"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-slate-700" />
-            <div className="flex items-center gap-3 border-b border-slate-800 p-4">
+        <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm md:hidden" onClick={() => setMobileOpen(false)}>
+          <div className="flex h-full w-full flex-col bg-slate-950" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center gap-3 border-b border-slate-800 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">
               <input
                 autoFocus
                 type="search"
@@ -266,7 +259,7 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto p-3 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+            <div className="flex-1 overflow-auto p-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
               {hasQuery ? (
                 filtered.length > 0 ? (
                   <div className="grid gap-2">
