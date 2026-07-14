@@ -224,9 +224,12 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
       </button>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm md:hidden" onClick={() => setMobileOpen(false)}>
-          <div className="flex h-full w-full flex-col bg-slate-950" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-center gap-3 border-b border-slate-800 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">
+        <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-[1px] md:hidden" onClick={() => setMobileOpen(false)}>
+          <div
+            className="mx-3 mt-[max(0.75rem,env(safe-area-inset-top))] rounded-2xl border border-slate-700 bg-slate-950/98"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center gap-2 border-b border-slate-800 p-3">
               <input
                 autoFocus
                 type="search"
@@ -239,13 +242,13 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
                   }
                 }}
                 placeholder="Buscar por nombre, categoría, ID..."
-                className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30"
+                className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30"
               />
               {hasQuery && (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="rounded-lg border border-slate-700 px-2 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-300"
+                  className="rounded-lg border border-slate-700 px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300"
                 >
                   Limpiar
                 </button>
@@ -253,13 +256,13 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300"
+                className="rounded-lg border border-slate-700 px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300"
               >
                 Cerrar
               </button>
             </div>
 
-            <div className="flex-1 overflow-auto p-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <div className="max-h-[60dvh] overflow-auto p-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
               {hasQuery ? (
                 filtered.length > 0 ? (
                   <div className="grid gap-2">
@@ -274,14 +277,14 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
                           setMobileOpen(false);
                           setQuery("");
                         }}
-                        className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-3"
+                        className="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/75 p-3"
                       >
-                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-white">
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-white">
                           <Image
                             src={producto.imagen}
                             alt={producto.nombre}
                             fill
-                            sizes="56px"
+                            sizes="48px"
                             quality={70}
                             className="object-contain p-1"
                           />
@@ -291,7 +294,6 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
                           <p className="truncate text-xs text-slate-400">
                             {producto.categoria} · {producto.subcategoria}
                           </p>
-                          <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-300">ID {producto.id}</p>
                         </div>
                       </Link>
                     ))}
