@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const WHATSAPP_PHONE = "5492983541686";
+const WHATSAPP_PHONE = "2494690261";
 const WHATSAPP_MESSAGE = encodeURIComponent(
   "Hola, quiero solicitar efectivo. Mis datos: Nombre y apellido:, Ciudad:, Monto aproximado:, Horario para contactarme:"
 );

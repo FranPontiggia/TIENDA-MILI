@@ -22,7 +22,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     : [producto.imagen]).filter(Boolean);
   const currentImage = images[activeImageIdx] || producto.imagen;
 
-  const whatsapp = `https://wa.me/5492983541686?text=${encodeURIComponent(
+  const whatsapp = `https://wa.me/2494690261?text=${encodeURIComponent(
     hasCuotas && selected
       ? `Hola, quiero comprar ${producto.nombre} - Plan: ${selected.dias} cuotas a $${selected.diaria} por día`
       : `Hola, quiero consultar por ${producto.nombre}`
