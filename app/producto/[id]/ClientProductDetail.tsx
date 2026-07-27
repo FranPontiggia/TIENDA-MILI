@@ -21,6 +21,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     ? producto.imagenes
     : [producto.imagen]).filter(Boolean);
   const currentImage = images[activeImageIdx] || producto.imagen;
+  const extraDetailValue = producto.color?.trim() || "";
 
   const whatsapp = `https://wa.me/2494690261?text=${encodeURIComponent(
     hasCuotas && selected
@@ -113,9 +114,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
               <h1 className="mb-4 text-3xl font-bold sm:text-4xl">{producto.nombre}</h1>
 
               <div className="mb-8">
-                <p className="mb-3 text-sm text-slate-400">
-                  <span className="font-semibold text-white">Color:</span> {producto.color}
-                </p>
+                <p className="mb-3 min-h-5 text-sm text-slate-400">{extraDetailValue}</p>
                 <p className="leading-relaxed text-slate-300">{producto.descripcion}</p>
               </div>
 
