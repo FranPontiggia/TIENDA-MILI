@@ -113,13 +113,14 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
             <div>
               <h1 className="mb-4 text-3xl font-bold sm:text-4xl">{producto.nombre}</h1>
 
-              <div className="mb-8">
-                <p className="mb-3 min-h-5 text-sm text-slate-400">{extraDetailValue}</p>
-                <p className="leading-relaxed text-slate-300">{producto.descripcion}</p>
-              </div>
+              <div className="flex flex-col">
+                <div className="order-2 mb-8">
+                  <p className="mb-3 min-h-5 text-sm text-slate-400">{extraDetailValue}</p>
+                  <p className="leading-relaxed text-slate-300">{producto.descripcion}</p>
+                </div>
 
-              {hasCuotas && selected ? (
-                <>
+                {hasCuotas && selected ? (
+                  <div className="order-1">
                   <h2 className="mb-4 text-xl font-bold">Elegi tu plan de pago</h2>
 
                   <div className="mb-8 overflow-hidden rounded-lg border border-slate-700">
@@ -190,13 +191,14 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                       </div>
                     )}
                   </div>
-                </>
-              ) : (
-                <div className="mb-8 rounded-lg border border-slate-700 bg-slate-900/40 p-4 text-slate-300">
-                  Este producto no tiene planes de cuotas cargados todavia. Podes consultarnos por WhatsApp para
-                  recibir opciones de pago.
-                </div>
-              )}
+                  </div>
+                ) : (
+                  <div className="order-1 mb-8 rounded-lg border border-slate-700 bg-slate-900/40 p-4 text-slate-300">
+                    Este producto no tiene planes de cuotas cargados todavia. Podes consultarnos por WhatsApp para
+                    recibir opciones de pago.
+                  </div>
+                )}
+              </div>
 
               <a
                 href={whatsapp}
