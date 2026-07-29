@@ -42,18 +42,14 @@ export default async function Home() {
               href={`/categoria/${encodeURIComponent(categoria)}`}
               className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/90 p-4 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40 sm:rounded-[28px] sm:p-6 lg:p-10"
             >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-xl text-emerald-300 sm:mb-6 sm:h-16 sm:w-16 sm:rounded-3xl sm:text-3xl">
-                {categoria === "Hogar" ? "🏠" : "🏬"}
+              <div className="mb-3 flex items-center gap-2 sm:mb-6 sm:gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-xl text-emerald-300 sm:h-14 sm:w-14 sm:rounded-3xl sm:text-3xl">
+                  {categoria === "Hogar" ? "🏠" : "🏬"}
+                </div>
+                <h2 className="text-lg font-semibold text-white capitalize sm:text-3xl lg:text-4xl">
+                  {categoria}
+                </h2>
               </div>
-              <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:mb-3 sm:text-sm sm:tracking-[0.35em]">
-                Categoría
-              </p>
-              <h2 className="text-lg font-semibold text-white capitalize sm:text-3xl lg:text-4xl">
-                {categoria}
-              </h2>
-              <p className="mt-2 text-xs leading-5 text-slate-400 sm:mt-4 sm:text-base sm:leading-7">
-                Ver productos y subcategorías para {categoria.toLowerCase()}.
-              </p>
               <div className="mt-4 hidden flex-wrap gap-2 sm:flex">
                 {items.slice(0, 6).map((item) => (
                   <span
@@ -69,8 +65,8 @@ export default async function Home() {
                   </span>
                 )}
               </div>
-              <div className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 sm:mt-8 sm:text-base">
-                Ir a {categoria}
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-sm font-semibold text-emerald-300 transition group-hover:border-emerald-300/70 group-hover:bg-emerald-500/20 sm:mt-8 sm:text-base">
+                Explorar
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </div>
             </Link>

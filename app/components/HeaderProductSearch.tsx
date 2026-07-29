@@ -116,12 +116,13 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
 
   return (
     <>
-      <div ref={desktopRootRef} className="relative hidden w-full max-w-md md:block">
+      <div ref={desktopRootRef} className="relative hidden w-full max-w-lg md:block">
+        <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-amber-400/15 to-emerald-500/20 blur-sm" />
         <svg
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+          className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-emerald-300/80"
         >
           <path
             strokeLinecap="round"
@@ -146,14 +147,14 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
             }
           }}
           placeholder="Buscar productos..."
-          className="w-full rounded-xl border border-slate-700 bg-slate-950/80 py-2 pl-10 pr-20 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30"
+          className="relative z-10 w-full rounded-2xl border border-emerald-400/50 bg-slate-900/95 py-2.5 pl-10 pr-20 text-sm text-white shadow-[0_0_0_1px_rgba(16,185,129,0.18),0_10px_24px_rgba(0,0,0,0.35)] outline-none transition placeholder:text-slate-400 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-400/35"
         />
 
         {hasQuery && (
           <button
             type="button"
             onClick={clearSearch}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1 text-xs text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
+            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-lg border border-slate-700 bg-slate-900/80 px-2 py-1 text-xs text-slate-300 transition hover:border-emerald-400/60 hover:text-emerald-200"
             aria-label="Limpiar búsqueda"
           >
             Limpiar
@@ -161,7 +162,7 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
         )}
 
         {shouldShowDesktopResults && (
-          <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-50 max-h-[70vh] overflow-auto rounded-2xl border border-slate-700/90 bg-slate-950/95 p-2 shadow-2xl shadow-black/50">
+          <div className="absolute left-0 right-0 top-[calc(100%+10px)] z-50 max-h-[70vh] overflow-auto rounded-2xl border border-emerald-500/35 bg-slate-950/95 p-2 shadow-2xl shadow-black/60">
             <p className="px-2 pb-2 text-[11px] uppercase tracking-[0.2em] text-slate-500">
               {filtered.length > 0
                 ? `${filtered.length} resultado${filtered.length === 1 ? "" : "s"}`
@@ -209,7 +210,7 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
-        className="flex h-10 min-w-[150px] items-center gap-2 rounded-full border border-slate-700 bg-slate-900/90 px-3 text-sm text-slate-300 transition hover:border-emerald-400/60 hover:text-emerald-300 md:hidden"
+        className="flex h-10 min-w-[160px] items-center gap-2 rounded-full border border-emerald-400/45 bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-amber-400/15 px-3 text-sm font-semibold text-emerald-100 shadow-[0_0_0_1px_rgba(16,185,129,0.2),0_8px_20px_rgba(0,0,0,0.35)] transition hover:border-emerald-300/70 hover:text-white md:hidden"
         aria-label="Abrir buscador"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-4 w-4 shrink-0">
