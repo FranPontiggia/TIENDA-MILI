@@ -35,26 +35,26 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="grid gap-6 md:grid-cols-2 mb-16">
+        <section className="mb-16 grid grid-cols-2 gap-4 md:gap-6">
           {catalogoPorCategoria.map(({ categoria, items }) => (
             <Link
               key={categoria}
               href={`/categoria/${encodeURIComponent(categoria)}`}
-              className="group relative overflow-hidden rounded-[28px] border border-slate-700/80 bg-slate-900/90 p-10 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40"
+              className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/90 p-4 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40 sm:rounded-[28px] sm:p-6 lg:p-10"
             >
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-500/10 text-3xl text-emerald-300">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-xl text-emerald-300 sm:mb-6 sm:h-16 sm:w-16 sm:rounded-3xl sm:text-3xl">
                 {categoria === "Hogar" ? "🏠" : "🏬"}
               </div>
-              <p className="text-sm uppercase tracking-[0.35em] text-slate-500 mb-3">
+              <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:mb-3 sm:text-sm sm:tracking-[0.35em]">
                 Categoría
               </p>
-              <h2 className="text-4xl font-semibold text-white capitalize">
+              <h2 className="text-lg font-semibold text-white capitalize sm:text-3xl lg:text-4xl">
                 {categoria}
               </h2>
-              <p className="mt-4 text-slate-400 leading-7">
+              <p className="mt-2 text-xs leading-5 text-slate-400 sm:mt-4 sm:text-base sm:leading-7">
                 Ver productos y subcategorías para {categoria.toLowerCase()}.
               </p>
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-4 hidden flex-wrap gap-2 sm:flex">
                 {items.slice(0, 6).map((item) => (
                   <span
                     key={`${categoria}-${item.nombre}`}
@@ -69,7 +69,7 @@ export default async function Home() {
                   </span>
                 )}
               </div>
-              <div className="mt-8 inline-flex items-center gap-2 text-emerald-400 font-semibold">
+              <div className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 sm:mt-8 sm:text-base">
                 Ir a {categoria}
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </div>

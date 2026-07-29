@@ -188,37 +188,24 @@ export async function getProductos(): Promise<Producto[]> {
 export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
   const safeLimit = Math.max(1, Math.min(Math.floor(limit), 24));
 
-  if (isLocalOnlyMode()) {
-    const productos = await getProductos();
-    return productos.slice(0, safeLimit);
-  }
+  const productos = await getProductos();
 
-  if (!supabase) {
-    if (isSupabaseOnlyMode()) {
-      throw getSupabaseRequiredError("getProductosDestacados");
+  const prioritized = [...productos].sort((a, b) => {
+    const aNombre = a.nombre.toLowerCase();
+    const bNombre = b.nombre.toLowerCase();
+    const aPreferido =
+      aNombre.includes("iphone") || aNombre.includes("lavarropa") || aNombre.includes("perfume");
+    const bPreferido =
+      bNombre.includes("iphone") || bNombre.includes("lavarropa") || bNombre.includes("perfume");
+
+    if (aPreferido === bPreferido) {
+      return a.id - b.id;
     }
 
-    const productos = await getProductos();
-    return productos.slice(0, safeLimit);
-  }
+    return aPreferido ? -1 : 1;
+  });
 
-  const { data, error } = await supabase
-    .from(productsTable)
-    .select("*")
-    .order("id", { ascending: true })
-    .range(0, safeLimit - 1);
-
-  if (error) {
-    if (isSupabaseOnlyMode()) {
-      throw new Error(`getProductosDestacados: no se pudo leer Supabase (${error.message}).`);
-    }
-
-    console.error("Error al obtener productos destacados:", error.message);
-    const productos = await getProductos();
-    return productos.slice(0, safeLimit);
-  }
-
-  return (data as ProductoRow[] | null | undefined ?? []).map(toProducto).filter((producto) => producto.id > 0);
+  return prioritized.slice(0, safeLimit);
 }
 
 export async function getProductoById(id: number): Promise<Producto | null> {
