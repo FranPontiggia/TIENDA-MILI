@@ -22,6 +22,9 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
     : [producto.imagen]).filter(Boolean);
   const currentImage = images[activeImageIdx] || producto.imagen;
   const extraDetailValue = producto.color?.trim() || "";
+  const isIphone17ProFrame = /iphone\s*17\s*pro\s*max|iphone\s*17\s*pro|iphone17promax|iphone17pro/i.test(
+    `${producto.nombre} ${currentImage}`
+  );
 
   const whatsapp = `https://wa.me/2494690261?text=${encodeURIComponent(
     hasCuotas && selected
@@ -58,7 +61,9 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                     sizes="(min-width: 1024px) 520px, 100vw"
                     quality={72}
                     priority
-                    className="object-cover transition duration-200"
+                    className={`transition duration-200 ${
+                      isIphone17ProFrame ? "object-contain object-top px-3 pt-4 pb-2" : "object-cover"
+                    }`}
                   />
                 </div>
 
@@ -85,25 +90,33 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                     </div>
 
                     <div className="flex gap-2 overflow-x-auto">
-                      {images.map((img, idx) => (
-                        <button
-                          key={`${img}-${idx}`}
-                          type="button"
-                          onClick={() => selectImage(idx)}
-                          className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border ${
-                            activeImageIdx === idx ? "border-emerald-400" : "border-slate-700"
-                          }`}
-                        >
-                          <Image
-                            src={img}
-                            alt={`${producto.nombre} ${idx + 1}`}
-                            fill
-                            sizes="64px"
-                            quality={50}
-                            className="object-cover"
-                          />
-                        </button>
-                      ))}
+                      {images.map((img, idx) => {
+                        const isIphone17ProThumb = /iphone\s*17\s*pro\s*max|iphone\s*17\s*pro|iphone17promax|iphone17pro/i.test(
+                          `${producto.nombre} ${img}`
+                        );
+
+                        return (
+                          <button
+                            key={`${img}-${idx}`}
+                            type="button"
+                            onClick={() => selectImage(idx)}
+                            className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border ${
+                              activeImageIdx === idx ? "border-emerald-400" : "border-slate-700"
+                            }`}
+                          >
+                            <Image
+                              src={img}
+                              alt={`${producto.nombre} ${idx + 1}`}
+                              fill
+                              sizes="64px"
+                              quality={50}
+                              className={
+                                isIphone17ProThumb ? "object-contain object-top px-1 pt-2 pb-1" : "object-cover"
+                              }
+                            />
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

@@ -64,6 +64,9 @@ export default async function SubcategoriaPage({
           <div className="flex flex-col gap-4">
             {filtrados.map((p) => {
               const primeraCuota = p.cuotas?.[0];
+              const isIphone17ProFrame = /iphone\s*17\s*pro\s*max|iphone\s*17\s*pro|iphone17promax|iphone17pro/i.test(
+                `${p.nombre} ${p.imagen}`
+              );
 
               return (
                 <Link
@@ -78,7 +81,9 @@ export default async function SubcategoriaPage({
                       fill
                       sizes="(min-width: 640px) 112px, 96px"
                       quality={65}
-                      className="object-cover transition duration-500 group-hover:scale-105"
+                      className={`transition duration-500 group-hover:scale-105 ${
+                        isIphone17ProFrame ? "object-contain object-top px-1 pt-2 pb-1" : "object-cover"
+                      }`}
                     />
                   </div>
 
