@@ -71,7 +71,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ cate
           </div>
 
           {destacados.length > 0 && (
-            <section className="mt-10 sm:mt-12 sm:hidden">
+            <section className="mt-10 sm:mt-12">
               <div className="mb-4 flex items-end justify-between">
                 <h2 className="text-lg font-semibold text-white sm:text-xl">Productos destacados</h2>
                 <Link href="/" className="text-xs font-semibold text-emerald-300 hover:text-emerald-200 sm:text-sm">
