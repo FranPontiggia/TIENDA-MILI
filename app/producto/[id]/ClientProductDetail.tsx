@@ -50,6 +50,8 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
             </Link>
           </div>
 
+          <h1 className="mb-6 text-3xl font-bold sm:text-4xl">{producto.nombre}</h1>
+
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="flex items-start">
               <div className="w-full overflow-hidden rounded-2xl border border-slate-700 bg-slate-800">
@@ -124,8 +126,6 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
             </div>
 
             <div>
-              <h1 className="mb-4 text-3xl font-bold sm:text-4xl">{producto.nombre}</h1>
-
               <div className="flex flex-col">
                 <div className="order-2 mb-8">
                   <p className="mb-3 min-h-5 text-sm text-slate-400">{extraDetailValue}</p>
@@ -186,9 +186,6 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                               <div className="flex-1">
                                 <p className="text-lg font-semibold">
                                   {c.dias} cuotas de {formatMoney(c.diaria)}
-                                </p>
-                                <p className="mt-1 text-sm text-slate-400">
-                                  Total: {formatMoney(c.diaria * c.dias)}
                                 </p>
                               </div>
                               {selectedIdx === idx && (

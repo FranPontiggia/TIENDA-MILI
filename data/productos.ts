@@ -208,6 +208,90 @@ export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
   return prioritized.slice(0, safeLimit);
 }
 
+export async function getProductosDestacadosPorCategoria(categoria: string, limit = 4): Promise<Producto[]> {
+  const safeLimit = Math.max(1, Math.min(Math.floor(limit), 24));
+  const normalizedCategoria = normalizeCategoriaName(categoria);
+  const productos = await getProductos();
+
+  return [...productos]
+    .filter((producto) => normalizeCategoriaName(producto.categoria) === normalizedCategoria)
+    .sort((a, b) => b.id - a.id)
+    .slice(0, safeLimit);
+}
+
+function normalizeSearchText(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+export async function getProductosDestacadosCurados(categoria: string, limit = 4): Promise<Producto[]> {
+  const safeLimit = Math.max(1, Math.min(Math.floor(limit), 24));
+  const normalizedCategoria = normalizeCategoriaName(categoria);
+  const productos = await getProductos();
+  const productosCategoria = productos.filter(
+    (producto) => normalizeCategoriaName(producto.categoria) === normalizedCategoria
+  );
+
+  const withText = productosCategoria.map((producto) => ({
+    producto,
+    nombre: normalizeSearchText(producto.nombre),
+    subcategoria: normalizeSearchText(producto.subcategoria),
+  }));
+
+  const celulares = withText
+    .filter((item) => item.subcategoria.includes("celular"))
+    .map((item) => item.producto)
+    .sort((a, b) => b.id - a.id);
+
+  const perfumes = withText
+    .filter((item) => item.subcategoria.includes("perfume") || item.nombre.includes("perfume"))
+    .map((item) => item.producto)
+    .sort((a, b) => b.id - a.id);
+
+  const lavarropasSubcategorias = new Set(
+    withText.filter((item) => item.nombre.includes("lavarropa")).map((item) => item.subcategoria)
+  );
+
+  const categoriaLavarropas = withText
+    .filter((item) => lavarropasSubcategorias.has(item.subcategoria))
+    .map((item) => item.producto)
+    .sort((a, b) => b.id - a.id);
+
+  const grupos = [celulares, perfumes, categoriaLavarropas];
+  const seleccionados: Producto[] = [];
+  const vistos = new Set<number>();
+
+  for (const grupo of grupos) {
+    const primero = grupo.find((producto) => !vistos.has(producto.id));
+    if (!primero) continue;
+    seleccionados.push(primero);
+    vistos.add(primero.id);
+  }
+
+  const pool = [...grupos.flat()].sort((a, b) => b.id - a.id);
+  for (const producto of pool) {
+    if (vistos.has(producto.id)) continue;
+    seleccionados.push(producto);
+    vistos.add(producto.id);
+    if (seleccionados.length >= safeLimit) break;
+  }
+
+  if (seleccionados.length < safeLimit) {
+    const fallbackCategoria = [...productosCategoria].sort((a, b) => b.id - a.id);
+    for (const producto of fallbackCategoria) {
+      if (vistos.has(producto.id)) continue;
+      seleccionados.push(producto);
+      vistos.add(producto.id);
+      if (seleccionados.length >= safeLimit) break;
+    }
+  }
+
+  return seleccionados.slice(0, safeLimit);
+}
+
 export async function getProductoById(id: number): Promise<Producto | null> {
   if (!Number.isFinite(id) || id <= 0) return null;
 

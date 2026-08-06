@@ -35,22 +35,25 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="mb-16 grid grid-cols-2 gap-4 md:gap-6">
+        <section className="mb-16 grid grid-cols-2 gap-3 sm:gap-5 md:gap-6">
           {catalogoPorCategoria.map(({ categoria, items }) => (
             <Link
               key={categoria}
               href={`/categoria/${encodeURIComponent(categoria)}`}
-              className="group relative overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/90 p-4 shadow-xl shadow-black/20 transition hover:-translate-y-1 hover:border-emerald-400/40 sm:rounded-[28px] sm:p-6 lg:p-10"
+              className="group relative min-h-[112px] overflow-hidden rounded-2xl border border-slate-800/80 bg-gradient-to-b from-slate-900/95 to-slate-950/95 p-2.5 shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:shadow-emerald-500/10 sm:min-h-[156px] sm:rounded-[28px] sm:p-5 lg:p-7"
             >
-              <div className="mb-3 flex items-center gap-2 sm:mb-6 sm:gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-xl text-emerald-300 sm:h-14 sm:w-14 sm:rounded-3xl sm:text-3xl">
+              <div className="mb-2 flex items-center gap-2 sm:mb-5 sm:gap-4">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-base text-emerald-300 sm:h-14 sm:w-14 sm:rounded-3xl sm:text-3xl">
                   {categoria === "Hogar" ? "🏠" : "🏬"}
                 </div>
-                <h2 className="text-lg font-semibold text-white capitalize sm:text-3xl lg:text-4xl">
-                  {categoria}
-                </h2>
+                <div className="min-w-0">
+                  <h2 className="truncate text-sm font-semibold tracking-tight text-white capitalize sm:text-3xl lg:text-4xl">
+                    {categoria}
+                  </h2>
+                  <p className="mt-0.5 text-[11px] text-slate-400 sm:text-sm">{items.length} subcategorías</p>
+                </div>
               </div>
-              <div className="mt-4 hidden flex-wrap gap-2 sm:flex">
+              <div className="mt-3 hidden flex-wrap gap-2 lg:flex">
                 {items.slice(0, 6).map((item) => (
                   <span
                     key={`${categoria}-${item.nombre}`}
@@ -65,7 +68,7 @@ export default async function Home() {
                   </span>
                 )}
               </div>
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-sm font-semibold text-emerald-300 transition group-hover:border-emerald-300/70 group-hover:bg-emerald-500/20 sm:mt-8 sm:text-base">
+              <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold tracking-wide text-emerald-300 transition group-hover:text-emerald-200 sm:mt-6 sm:text-sm">
                 Explorar
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </div>

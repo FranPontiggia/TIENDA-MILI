@@ -1,6 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { subcategorias } from "@/data/subcategoria";
 import { formatSubcategoriaLabel, normalizeCategoriaName } from "@/data/catalogo";
+import { getProductosDestacadosCurados } from "@/data/productos";
 import BackToPreviousButton from "@/app/components/BackToPreviousButton";
 
 export default async function CategoriaPage({ params }: { params: Promise<{ categoria: string }> }) {
@@ -10,13 +12,14 @@ export default async function CategoriaPage({ params }: { params: Promise<{ cate
   const filtradas = subcategorias.filter(
     (s) => normalizeCategoriaName(s.categoria) === normalizedCategoria
   );
+  const destacados = await getProductosDestacadosCurados(decodedCategoria, 4);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#24170f] via-[#15100c] to-[#090706] text-white">
-      <div className="px-6 py-16 sm:py-24">
+      <div className="px-4 py-10 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
-          <div className="mb-12">
+          <div className="mb-8 sm:mb-10">
             <div className="mb-6 flex items-center gap-3">
               <BackToPreviousButton className="inline-flex items-center gap-2 text-slate-400 transition hover:text-emerald-400" />
               <Link
@@ -36,7 +39,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ cate
           </div>
 
           {/* Grid de subcategorías */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 xl:grid-cols-5">
             {filtradas.map((s) => {
               const displayName = formatSubcategoriaLabel(s.nombre);
 
@@ -44,32 +47,63 @@ export default async function CategoriaPage({ params }: { params: Promise<{ cate
                 <Link
                   key={s.nombre}
                   href={`/subcategoria/${encodeURIComponent(s.nombre)}`}
-                  className="group relative overflow-hidden rounded-2xl"
+                  className="group relative overflow-hidden rounded-xl"
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 to-blue-600/20 group-hover:from-emerald-600/40 group-hover:to-blue-600/40 transition-all duration-300" />
-                  <div className="absolute inset-0 border border-emerald-500/20 group-hover:border-emerald-400/40 transition-all rounded-2xl" />
+                  <div className="absolute inset-0 rounded-xl border border-emerald-500/20 transition-all group-hover:border-emerald-400/40" />
                   
-                  <div className="relative p-6 sm:p-8 min-h-[160px] flex flex-col justify-between backdrop-blur-sm">
-                    <div>
-                      <h2 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-emerald-300 transition">
-                        {displayName}
-                      </h2>
-                      <p className="text-slate-400 text-sm">
-                        Explorar productos
-                      </p>
-                    </div>
-                  
-                  <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm mt-4">
-                    Ver más
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="relative flex min-h-[62px] items-center justify-between p-2.5 backdrop-blur-sm sm:min-h-[70px] sm:p-3">
+                    <h2 className="pr-2 text-xs font-bold leading-tight text-white transition group-hover:text-emerald-300 sm:text-sm">
+                      {displayName}
+                    </h2>
+                    <svg
+                      className="h-3 w-3 shrink-0 text-emerald-300/90 transition group-hover:translate-x-0.5 group-hover:text-emerald-200 sm:h-3.5 sm:w-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
-                </div>
               </Link>
             );
             })}
           </div>
+
+          {destacados.length > 0 && (
+            <section className="mt-10 sm:mt-12 sm:hidden">
+              <div className="mb-4 flex items-end justify-between">
+                <h2 className="text-lg font-semibold text-white sm:text-xl">Productos destacados</h2>
+                <Link href="/" className="text-xs font-semibold text-emerald-300 hover:text-emerald-200 sm:text-sm">
+                  Ver todos
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {destacados.map((producto) => (
+                  <Link
+                    key={producto.id}
+                    href={`/producto/${producto.id}`}
+                    className="group overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 transition hover:border-emerald-500/40"
+                  >
+                    <div className="relative h-24 w-full bg-slate-800 sm:h-28">
+                      <Image
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        fill
+                        sizes="(min-width: 640px) 25vw, 50vw"
+                        quality={60}
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="p-2.5">
+                      <p className="line-clamp-2 text-xs font-medium text-white sm:text-sm">{producto.nombre}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </main>
