@@ -79,25 +79,27 @@ export default async function CategoriaPage({ params }: { params: Promise<{ cate
                 </Link>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
                 {destacados.map((producto) => (
                   <Link
                     key={producto.id}
                     href={`/producto/${producto.id}`}
-                    className="group overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 transition hover:border-emerald-500/40"
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 transition hover:border-emerald-500/40"
                   >
-                    <div className="relative h-24 w-full bg-slate-800 sm:h-28">
+                    <div className="relative aspect-square w-full bg-gradient-to-br from-white via-slate-50 to-slate-100">
                       <Image
                         src={producto.imagen}
                         alt={producto.nombre}
                         fill
                         sizes="(min-width: 640px) 25vw, 50vw"
                         quality={60}
-                        className="object-cover transition duration-300 group-hover:scale-105"
+                        className="object-contain p-3 transition duration-300 group-hover:scale-105 lg:p-4"
                       />
                     </div>
-                    <div className="p-2.5">
-                      <p className="line-clamp-2 text-xs font-medium text-white sm:text-sm">{producto.nombre}</p>
+                    <div className="flex flex-1 items-start p-2.5 sm:p-3 lg:p-4">
+                      <p className="line-clamp-2 text-xs font-medium leading-snug text-white sm:text-sm lg:text-base">
+                        {producto.nombre}
+                      </p>
                     </div>
                   </Link>
                 ))}
