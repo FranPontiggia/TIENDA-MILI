@@ -135,6 +135,22 @@ Para simular sin escribir archivos:
 npm run capturas:process:dry
 ```
 
+## Casos especiales: achicar sin recortar
+
+Para fotos grandes donde no queres recortar (solo reducir tamaño), usa `capturas-especiales/` y este comando:
+
+```bash
+npm run capturas:fit
+```
+
+Para simular sin escribir archivos:
+
+```bash
+npm run capturas:fit:dry
+```
+
+Este modo conserva toda la imagen y solo la redimensiona (fit inside) antes de convertir a WebP.
+
 Configura el recorte en `scripts/process-capturas.mjs` con estas variables:
 
 - `CROP_TOP`
@@ -143,6 +159,8 @@ Configura el recorte en `scripts/process-capturas.mjs` con estas variables:
 - `CROP_RIGHT`
 
 Para usar nombres personalizados, crea `capturas/nombres-map.json` con pares `archivo-original -> nombre-salida`.
+
+Para casos especiales, tambien podes usar `capturas-especiales/nombres-map.json`.
 
 Ejemplo:
 

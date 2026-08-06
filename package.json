@@ -17,7 +17,9 @@
     "fix:images:dry": "node scripts/fix-product-images.mjs --dry-run",
     "fix:images": "node scripts/fix-product-images.mjs",
     "capturas:process": "node scripts/process-capturas.mjs",
-    "capturas:process:dry": "node scripts/process-capturas.mjs --dry-run"
+    "capturas:process:dry": "node scripts/process-capturas.mjs --dry-run",
+    "capturas:fit": "node scripts/process-capturas.mjs --mode=fit --input=capturas-especiales",
+    "capturas:fit:dry": "node scripts/process-capturas.mjs --mode=fit --input=capturas-especiales --dry-run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",

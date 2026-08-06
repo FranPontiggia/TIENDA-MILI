@@ -2,6 +2,11 @@ import { existsSync, mkdirSync, readFileSync, readdirSync } from "fs";
 import { basename, extname, join, resolve } from "path";
 import sharp from "sharp";
 
+// Modes:
+// - crop (default): fixed crop + optional trim + margin
+// - fit: resize inside a max box, preserving full image (no crop)
+const DEFAULT_MODE = "crop";
+
 // Crop config in pixels. Increase values to remove more area from each side.
 // Tuned for mobile screenshots with top status/app bars and bottom nav bar.
 const CROP_TOP = 500;
@@ -17,10 +22,37 @@ const TRIM_THRESHOLD = 28;
 const WEBP_QUALITY = 78;
 const WEBP_EFFORT = 5;
 const OUTPUT_MARGIN = 22;
+const FIT_MAX_WIDTH = 1300;
+const FIT_MAX_HEIGHT = 1300;
 
-const INPUT_DIR = resolve("capturas");
+function getArgValue(name) {
+  const withEquals = process.argv.find((arg) => arg.startsWith(`--${name}=`));
+  if (withEquals) {
+    return withEquals.slice(name.length + 3);
+  }
+
+  const index = process.argv.indexOf(`--${name}`);
+  if (index >= 0) {
+    return process.argv[index + 1];
+  }
+
+  return undefined;
+}
+
+function resolveMode() {
+  const mode = (getArgValue("mode") ?? DEFAULT_MODE).toLowerCase().trim();
+  if (mode !== "crop" && mode !== "fit") {
+    throw new Error(`Invalid mode: ${mode}. Use --mode=crop or --mode=fit.`);
+  }
+
+  return mode;
+}
+
+const MODE = resolveMode();
+const inputArg = getArgValue("input") ?? "capturas";
+const INPUT_DIR = resolve(inputArg);
 const OUTPUT_DIR = resolve("public", "imagen");
-const NAME_MAP_FILE = resolve("capturas", "nombres-map.json");
+const NAME_MAP_FILE = resolve(INPUT_DIR, "nombres-map.json");
 const dryRun = process.argv.includes("--dry-run");
 
 const SUPPORTED_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"]);
@@ -131,34 +163,45 @@ async function processImage(inputFilePath, outputFilePath) {
     };
   }
 
-  const extractWidth = width - CROP_LEFT - CROP_RIGHT;
-  const extractHeight = height - CROP_TOP - CROP_BOTTOM;
+  let pipeline = image;
 
-  if (extractWidth <= 0 || extractHeight <= 0) {
-    return {
-      status: "error",
-      reason: `Invalid crop for image size ${width}x${height}: ${inputFilePath}`,
-    };
-  }
+  if (MODE === "crop") {
+    const extractWidth = width - CROP_LEFT - CROP_RIGHT;
+    const extractHeight = height - CROP_TOP - CROP_BOTTOM;
 
-  let pipeline = image.extract({
-    left: CROP_LEFT,
-    top: CROP_TOP,
-    width: extractWidth,
-    height: extractHeight,
-  });
+    if (extractWidth <= 0 || extractHeight <= 0) {
+      return {
+        status: "error",
+        reason: `Invalid crop for image size ${width}x${height}: ${inputFilePath}`,
+      };
+    }
 
-  if (AUTO_TRIM) {
-    pipeline = pipeline.trim({ threshold: TRIM_THRESHOLD });
-  }
+    pipeline = pipeline.extract({
+      left: CROP_LEFT,
+      top: CROP_TOP,
+      width: extractWidth,
+      height: extractHeight,
+    });
 
-  if (OUTPUT_MARGIN > 0) {
-    pipeline = pipeline.extend({
-      top: OUTPUT_MARGIN,
-      right: OUTPUT_MARGIN,
-      bottom: OUTPUT_MARGIN,
-      left: OUTPUT_MARGIN,
+    if (AUTO_TRIM) {
+      pipeline = pipeline.trim({ threshold: TRIM_THRESHOLD });
+    }
+
+    if (OUTPUT_MARGIN > 0) {
+      pipeline = pipeline.extend({
+        top: OUTPUT_MARGIN,
+        right: OUTPUT_MARGIN,
+        bottom: OUTPUT_MARGIN,
+        left: OUTPUT_MARGIN,
         extendWith: "copy",
+      });
+    }
+  } else {
+    pipeline = pipeline.resize({
+      width: FIT_MAX_WIDTH,
+      height: FIT_MAX_HEIGHT,
+      fit: "inside",
+      withoutEnlargement: true,
     });
   }
 
@@ -198,11 +241,16 @@ async function main() {
   let errors = 0;
 
   console.log(`Mode: ${dryRun ? "dry-run" : "write"}`);
+  console.log(`Process mode: ${MODE}`);
   console.log(`Input: ${INPUT_DIR}`);
   console.log(`Output: ${OUTPUT_DIR}`);
-  console.log(`Crop(px): top=${CROP_TOP}, bottom=${CROP_BOTTOM}, left=${CROP_LEFT}, right=${CROP_RIGHT}`);
-  console.log(`Auto-trim: ${AUTO_TRIM ? `on (threshold=${TRIM_THRESHOLD})` : "off"}`);
-  console.log(`Output margin: ${OUTPUT_MARGIN}px`);
+  if (MODE === "crop") {
+    console.log(`Crop(px): top=${CROP_TOP}, bottom=${CROP_BOTTOM}, left=${CROP_LEFT}, right=${CROP_RIGHT}`);
+    console.log(`Auto-trim: ${AUTO_TRIM ? `on (threshold=${TRIM_THRESHOLD})` : "off"}`);
+    console.log(`Output margin: ${OUTPUT_MARGIN}px`);
+  } else {
+    console.log(`Fit max size(px): ${FIT_MAX_WIDTH}x${FIT_MAX_HEIGHT} (inside, no crop)`);
+  }
   console.log(`Name map: ${existsSync(NAME_MAP_FILE) ? NAME_MAP_FILE : "not found (using automatic names)"}`);
   console.log(`Found ${inputFiles.length} image(s)`);
 
