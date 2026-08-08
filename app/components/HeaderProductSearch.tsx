@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type SearchProduct = {
   id: number;
@@ -42,6 +42,7 @@ function buildSearchIndex(producto: SearchProduct): string {
 
 export default function HeaderProductSearch({ productos }: HeaderProductSearchProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const desktopRootRef = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -95,6 +96,11 @@ export default function HeaderProductSearch({ productos }: HeaderProductSearchPr
       document.body.style.overflow = previousOverflow;
     };
   }, [mobileOpen]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setDesktopOpen(false);
+  }, [pathname]);
 
   const hasQuery = normalizedQuery.length > 0;
   const shouldShowDesktopResults = desktopOpen && hasQuery;
