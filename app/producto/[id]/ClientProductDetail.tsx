@@ -64,7 +64,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                     quality={72}
                     priority
                     className={`transition duration-200 ${
-                      isIphone17ProFrame ? "object-contain object-top px-3 pt-4 pb-2" : "object-cover"
+                      isIphone17ProFrame ? "object-contain object-top px-3 pt-4 pb-2" : "object-contain p-4"
                     }`}
                   />
                 </div>
@@ -113,7 +113,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
                               sizes="64px"
                               quality={50}
                               className={
-                                isIphone17ProThumb ? "object-contain object-top px-1 pt-2 pb-1" : "object-cover"
+                                isIphone17ProThumb ? "object-contain object-top px-1 pt-2 pb-1" : "object-contain p-1"
                               }
                             />
                           </button>

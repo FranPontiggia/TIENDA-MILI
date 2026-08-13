@@ -151,6 +151,12 @@ npm run capturas:fit:dry
 
 Este modo conserva toda la imagen y solo la redimensiona (fit inside) antes de convertir a WebP.
 
+Si queres regenerar y reemplazar archivos existentes en `public/imagen`:
+
+```bash
+npm run capturas:fit:overwrite
+```
+
 Configura el recorte en `scripts/process-capturas.mjs` con estas variables:
 
 - `CROP_TOP`

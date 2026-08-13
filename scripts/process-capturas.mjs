@@ -22,8 +22,8 @@ const TRIM_THRESHOLD = 28;
 const WEBP_QUALITY = 78;
 const WEBP_EFFORT = 5;
 const OUTPUT_MARGIN = 22;
-const FIT_MAX_WIDTH = 1300;
-const FIT_MAX_HEIGHT = 1300;
+const FIT_MAX_WIDTH = 1100;
+const FIT_MAX_HEIGHT = 1100;
 
 function getArgValue(name) {
   const withEquals = process.argv.find((arg) => arg.startsWith(`--${name}=`));
@@ -54,6 +54,7 @@ const INPUT_DIR = resolve(inputArg);
 const OUTPUT_DIR = resolve("public", "imagen");
 const NAME_MAP_FILE = resolve(INPUT_DIR, "nombres-map.json");
 const dryRun = process.argv.includes("--dry-run");
+const overwrite = process.argv.includes("--overwrite");
 
 const SUPPORTED_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"]);
 
@@ -143,7 +144,7 @@ function buildOutputPlan(inputFiles, nameMap) {
 
 async function processImage(inputFilePath, outputFilePath) {
 
-  if (existsSync(outputFilePath)) {
+  if (existsSync(outputFilePath) && !overwrite) {
     return {
       status: "skipped",
       reason: `Already exists, skipped: ${outputFilePath}`,
@@ -244,6 +245,7 @@ async function main() {
   console.log(`Process mode: ${MODE}`);
   console.log(`Input: ${INPUT_DIR}`);
   console.log(`Output: ${OUTPUT_DIR}`);
+  console.log(`Overwrite existing: ${overwrite ? "yes" : "no"}`);
   if (MODE === "crop") {
     console.log(`Crop(px): top=${CROP_TOP}, bottom=${CROP_BOTTOM}, left=${CROP_LEFT}, right=${CROP_RIGHT}`);
     console.log(`Auto-trim: ${AUTO_TRIM ? `on (threshold=${TRIM_THRESHOLD})` : "off"}`);

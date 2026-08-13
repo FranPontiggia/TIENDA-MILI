@@ -82,7 +82,7 @@ export default async function SubcategoriaPage({
                       sizes="(min-width: 640px) 112px, 96px"
                       quality={65}
                       className={`transition duration-500 group-hover:scale-105 ${
-                        isIphone17ProFrame ? "object-contain object-top px-1 pt-2 pb-1" : "object-cover"
+                        isIphone17ProFrame ? "object-contain object-top p-1" : "object-contain p-1.5"
                       }`}
                     />
                   </div>
