@@ -54,7 +54,7 @@ export default async function Home() {
             <p className="text-sm text-slate-400">Seleccioná un producto para ver sus cuotas.</p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
             {destacados.map((producto, index) => {
               const primeraCuota = producto.cuotas?.[0];
               const isCafetera = producto.nombre.toLowerCase().includes("cafetera");
@@ -69,7 +69,7 @@ export default async function Home() {
                       : "border-slate-700/70 bg-slate-900/80 hover:border-emerald-400/40"
                   }`}
                 >
-                  <div className="relative h-64 w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-200">
+                  <div className="relative h-40 w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-200 sm:h-64">
                     <Image
                       src={producto.imagen}
                       alt={producto.nombre}
@@ -81,23 +81,23 @@ export default async function Home() {
                     />
                     <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-slate-950/80 to-transparent" />
                   </div>
-                  <div className="p-6">
-                    <div className="text-xs uppercase tracking-[0.35em] text-slate-500">
+                  <div className="p-3 sm:p-6">
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:text-xs sm:tracking-[0.35em]">
                       {producto.categoria} · {producto.subcategoria}
                     </div>
-                    <h3 className="mt-4 text-2xl font-semibold text-white line-clamp-2">
+                    <h3 className="mt-2 text-sm font-semibold text-white line-clamp-2 sm:mt-4 sm:text-2xl">
                       {producto.nombre}
                     </h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-400 line-clamp-3">
+                    <p className="mt-2 text-xs leading-5 text-slate-400 line-clamp-2 sm:mt-3 sm:text-sm sm:leading-6 sm:line-clamp-3">
                       {producto.descripcion}
                     </p>
-                    <div className="mt-6 flex items-center justify-between gap-3">
-                      <span className="text-emerald-400 font-bold text-xl">
+                    <div className="mt-3 flex items-center justify-between gap-2 sm:mt-6 sm:gap-3">
+                      <span className="text-sm font-bold text-emerald-400 sm:text-xl">
                         {primeraCuota
                           ? `${primeraCuota.dias} cuotas de $${primeraCuota.diaria}`
                           : "En cuotas"}
                       </span>
-                      <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">
+                      <span className="hidden rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300 sm:inline-flex">
                       Cuotas
                       </span>
                     </div>
