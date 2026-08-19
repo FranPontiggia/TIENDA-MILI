@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import HeaderProductSearch from "@/app/components/HeaderProductSearch";
+import MobileShareButton from "@/app/components/MobileShareButton";
 import { getProductos } from "@/data/productos";
 import "./globals.css";
 
@@ -18,6 +19,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Cuota Market",
   description: "Electrodomésticos confiables para tu hogar. Pedidos y consultas por WhatsApp.",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#120d09",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Cuota Market",
+  },
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default async function RootLayout({
@@ -68,6 +83,8 @@ export default async function RootLayout({
           Efectivo
           <span aria-hidden>↗</span>
         </Link>
+
+        <MobileShareButton />
       </body>
     </html>
   );
