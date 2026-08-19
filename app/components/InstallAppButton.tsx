@@ -56,7 +56,10 @@ export default function InstallAppButton({ className }: InstallAppButtonProps) {
       return;
     }
 
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      window.alert("Si no aparece instalacion directa: abre el menu del navegador y elegi 'Instalar aplicacion' o 'Agregar a pantalla de inicio'.");
+      return;
+    }
 
     await deferredPrompt.prompt();
     const choice = await deferredPrompt.userChoice;
@@ -67,7 +70,6 @@ export default function InstallAppButton({ className }: InstallAppButtonProps) {
   }
 
   if (isInstalled) return null;
-  if (!isIos && !deferredPrompt) return null;
 
   return (
     <button type="button" onClick={handleInstall} className={className} aria-label="Instalar app">
