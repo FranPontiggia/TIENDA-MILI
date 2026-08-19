@@ -57,7 +57,24 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
             <div className="flex items-start">
               <div className="w-full overflow-hidden rounded-2xl border border-slate-700 bg-slate-800">
                 <div className="relative aspect-square overflow-hidden" style={{ userSelect: "none" }}>
-                  <ProductShareButton productName={producto.nombre} variant="overlay" />
+                  <div className="absolute right-3 top-3 z-20 flex flex-col items-center gap-2">
+                    <a
+                      href={whatsapp}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-emerald-200 bg-emerald-500 text-white shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition hover:scale-105 hover:bg-emerald-400"
+                      aria-label="Comprar por WhatsApp"
+                    >
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                        <path d="M20.52 3.48A11.87 11.87 0 0 0 12.02 0C5.4 0 .02 5.38.02 12c0 2.12.55 4.2 1.6 6.03L0 24l6.15-1.61A11.95 11.95 0 0 0 12 24h.01c6.62 0 12-5.38 12-12 0-3.2-1.25-6.2-3.49-8.52zm-8.5 18.5h-.01a9.9 9.9 0 0 1-5.04-1.37l-.36-.21-3.65.96.98-3.56-.24-.37A9.9 9.9 0 0 1 2.02 12c0-5.5 4.48-9.98 10-9.98 2.67 0 5.18 1.04 7.06 2.92A9.93 9.93 0 0 1 22.02 12c0 5.5-4.48 9.98-10 9.98zm5.48-7.48c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.28-.47-2.43-1.49-.9-.8-1.5-1.79-1.67-2.09-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.5 1.69.64.71.22 1.36.19 1.88.12.57-.08 1.77-.72 2.03-1.41.25-.7.25-1.29.18-1.42-.08-.13-.28-.2-.58-.35z" />
+                      </svg>
+                    </a>
+                    <ProductShareButton
+                      productName={producto.nombre}
+                      variant="overlay"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition hover:scale-105 hover:text-emerald-600"
+                    />
+                  </div>
                   <Image
                     src={currentImage}
                     alt={producto.nombre}
