@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import HeaderProductSearch from "@/app/components/HeaderProductSearch";
+import InstallAppButton from "@/app/components/InstallAppButton";
 import MobileShareButton from "@/app/components/MobileShareButton";
 import { getProductos } from "@/data/productos";
 import "./globals.css";
@@ -70,6 +71,7 @@ export default async function RootLayout({
               Solicitar efectivo
               <span aria-hidden>↗</span>
             </Link>
+            <InstallAppButton className="hidden shrink-0 rounded-full border border-slate-500/50 bg-slate-800/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-100 transition hover:border-slate-300 hover:bg-slate-700 lg:inline-flex" />
             <HeaderProductSearch productos={searchProducts} />
           </div>
         </header>
@@ -83,6 +85,8 @@ export default async function RootLayout({
           Efectivo
           <span aria-hidden>↗</span>
         </Link>
+
+        <InstallAppButton className="fixed bottom-16 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-slate-300/40 bg-slate-900/90 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition hover:bg-slate-800 md:hidden" />
 
         <MobileShareButton />
       </body>
