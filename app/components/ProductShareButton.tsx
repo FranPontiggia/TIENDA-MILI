@@ -18,13 +18,12 @@ export default function ProductShareButton({
   async function handleShare() {
     if (typeof window === "undefined") return;
 
-    const url = window.location.href;
     const title = productName;
-    const text = `Mira este producto en Cuota Market: ${productName}`;
+    const text = `${productName}\nMirá este producto en Cuota Market.`;
 
     try {
       if (navigator.share) {
-        await navigator.share({ title, text, url });
+        await navigator.share({ title, text });
         setFeedback("ok");
         setTimeout(() => setFeedback("idle"), 1600);
         return;
