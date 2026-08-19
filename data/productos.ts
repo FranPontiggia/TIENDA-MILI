@@ -190,19 +190,36 @@ export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
 
   const productos = await getProductos();
 
-  const prioritized = [...productos].sort((a, b) => {
-    const aNombre = a.nombre.toLowerCase();
-    const bNombre = b.nombre.toLowerCase();
-    const aPreferido =
-      aNombre.includes("iphone") || aNombre.includes("lavarropa") || aNombre.includes("perfume");
-    const bPreferido =
-      bNombre.includes("iphone") || bNombre.includes("lavarropa") || bNombre.includes("perfume");
+  const getPriorityScore = (producto: Producto): number => {
+    const nombre = normalizeSearchText(producto.nombre);
+    const subcategoria = normalizeSearchText(producto.subcategoria);
 
-    if (aPreferido === bPreferido) {
-      return a.id - b.id;
+    let score = 0;
+
+    if (nombre.includes("iphone")) {
+      score += 300;
     }
 
-    return aPreferido ? -1 : 1;
+    if (subcategoria.includes("cuidado del hogar") || subcategoria.includes("cuidado hogar")) {
+      score += 200;
+    }
+
+    if (subcategoria.includes("electrohogar")) {
+      score += 150;
+    }
+
+    return score;
+  };
+
+  const prioritized = [...productos].sort((a, b) => {
+    const aScore = getPriorityScore(a);
+    const bScore = getPriorityScore(b);
+
+    if (aScore === bScore) {
+      return b.id - a.id;
+    }
+
+    return bScore - aScore;
   });
 
   return prioritized.slice(0, safeLimit);
