@@ -4,6 +4,7 @@ import { categorias } from "@/data/categoria";
 import { subcategorias } from "@/data/subcategoria";
 import { formatSubcategoriaLabel } from "@/data/catalogo";
 import { getProductosDestacados } from "@/data/productos";
+import MobileShareButton from "@/app/components/MobileShareButton";
 
 export const dynamic = "force-dynamic";
 
@@ -51,10 +52,13 @@ export default async function Home() {
               <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Productos destacados</p>
               <h2 className="text-3xl font-bold text-white">Lo más elegido</h2>
             </div>
-            <p className="text-sm text-slate-400">Seleccioná un producto para ver sus cuotas.</p>
+            <div className="flex items-center gap-3">
+              <p className="text-sm text-slate-400">Seleccioná un producto para ver sus cuotas.</p>
+              <MobileShareButton className="hidden md:inline-flex items-center gap-2 rounded-full border border-slate-600/70 bg-slate-900/80 px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-200 transition hover:border-emerald-400/50 hover:text-emerald-200" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6">
             {destacados.map((producto, index) => {
               const primeraCuota = producto.cuotas?.[0];
               const isCafetera = producto.nombre.toLowerCase().includes("cafetera");

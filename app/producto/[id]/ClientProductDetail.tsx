@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type Producto } from "@/data/productos";
 import BackToPreviousButton from "@/app/components/BackToPreviousButton";
+import ProductShareButton from "@/app/components/ProductShareButton";
 
 const formatMoney = (v: number) => `$${v.toLocaleString("es-AR")}`;
 
@@ -56,6 +57,7 @@ export default function ClientProductDetail({ producto }: { producto: Producto }
             <div className="flex items-start">
               <div className="w-full overflow-hidden rounded-2xl border border-slate-700 bg-slate-800">
                 <div className="relative aspect-square overflow-hidden" style={{ userSelect: "none" }}>
+                  <ProductShareButton productName={producto.nombre} variant="overlay" />
                   <Image
                     src={currentImage}
                     alt={producto.nombre}

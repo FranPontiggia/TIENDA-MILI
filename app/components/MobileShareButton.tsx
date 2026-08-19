@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 
-export default function MobileShareButton() {
+type MobileShareButtonProps = {
+  className?: string;
+};
+
+export default function MobileShareButton({ className }: MobileShareButtonProps) {
   const [feedback, setFeedback] = useState<"idle" | "ok" | "error">("idle");
 
   async function handleShare() {
@@ -33,7 +37,10 @@ export default function MobileShareButton() {
     <button
       type="button"
       onClick={handleShare}
-      className="fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-slate-300/40 bg-slate-900/90 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition hover:bg-slate-800 md:hidden"
+      className={
+        className ??
+        "fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-slate-300/40 bg-slate-900/90 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition hover:bg-slate-800 md:hidden"
+      }
       aria-label="Compartir tienda"
     >
       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
