@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   title: "Cuota Market",
   description: "Electrodomésticos confiables para tu hogar. Pedidos y consultas por WhatsApp.",
   manifest: "/manifest.webmanifest",
-  themeColor: "#120d09",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -34,6 +33,10 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
+};
+
+export const viewport = {
+  themeColor: "#120d09",
 };
 
 export default async function RootLayout({
