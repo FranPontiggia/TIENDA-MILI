@@ -16,15 +16,25 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#24170f] via-[#15100c] to-[#090706] text-white">
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 sm:py-24">
-        <header className="mb-16 text-center">
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
+        <header className="mb-10 text-center sm:mb-12">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
             Cuota Market
           </h1>
-          <p className="mx-auto mt-5 max-w-3xl text-base sm:text-lg text-slate-300">
+          <p className="mx-auto mt-4 max-w-3xl text-base sm:text-lg text-slate-300">
             Todo para tu hogar y comercio en cuotas.
           </p>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            {categorias.map((categoria) => (
+              <Link
+                key={categoria.nombre}
+                href={`/categoria/${encodeURIComponent(categoria.nombre)}`}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-200 transition hover:border-emerald-400/60 hover:text-emerald-200"
+              >
+                <span aria-hidden>{categoria.nombre === "Hogar" ? "🏠" : "🏬"}</span>
+                {categoria.nombre}
+              </Link>
+            ))}
             <Link
               href="/solicitar-efectivo"
               className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-2 text-sm font-semibold text-emerald-300 transition hover:border-emerald-300/70 hover:bg-emerald-500/20"
@@ -35,48 +45,7 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="mb-16 grid grid-cols-2 gap-3 sm:gap-5 md:gap-6">
-          {catalogoPorCategoria.map(({ categoria, items }) => (
-            <Link
-              key={categoria}
-              href={`/categoria/${encodeURIComponent(categoria)}`}
-              className="group relative min-h-[112px] overflow-hidden rounded-2xl border border-slate-800/80 bg-gradient-to-b from-slate-900/95 to-slate-950/95 p-2.5 shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:shadow-emerald-500/10 sm:min-h-[156px] sm:rounded-[28px] sm:p-5 lg:p-7"
-            >
-              <div className="mb-2 flex items-center gap-2 sm:mb-5 sm:gap-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-base text-emerald-300 sm:h-14 sm:w-14 sm:rounded-3xl sm:text-3xl">
-                  {categoria === "Hogar" ? "🏠" : "🏬"}
-                </div>
-                <div className="min-w-0">
-                  <h2 className="truncate text-sm font-semibold tracking-tight text-white capitalize sm:text-3xl lg:text-4xl">
-                    {categoria}
-                  </h2>
-                  <p className="mt-0.5 text-[11px] text-slate-400 sm:text-sm">{items.length} subcategorías</p>
-                </div>
-              </div>
-              <div className="mt-3 hidden flex-wrap gap-2 lg:flex">
-                {items.slice(0, 6).map((item) => (
-                  <span
-                    key={`${categoria}-${item.nombre}`}
-                    className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-xs text-slate-300"
-                  >
-                    {formatSubcategoriaLabel(item.nombre)}
-                  </span>
-                ))}
-                {items.length > 6 && (
-                  <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-300">
-                    +{items.length - 6} más
-                  </span>
-                )}
-              </div>
-              <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold tracking-wide text-emerald-300 transition group-hover:text-emerald-200 sm:mt-6 sm:text-sm">
-                Explorar
-                <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-              </div>
-            </Link>
-          ))}
-        </section>
-
-        <section className="mb-16">
+        <section className="mb-12">
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Productos destacados</p>
@@ -136,6 +105,52 @@ export default async function Home() {
                 </Link>
               );
             })}
+          </div>
+        </section>
+
+        <section className="mb-6">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-xl font-bold text-white sm:text-2xl">Explorar categorías</h2>
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-500">rápido</span>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+            {catalogoPorCategoria.map(({ categoria, items }) => (
+              <Link
+                key={categoria}
+                href={`/categoria/${encodeURIComponent(categoria)}`}
+                className="group rounded-2xl border border-slate-800/80 bg-slate-900/70 p-4 transition hover:border-emerald-400/50"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-sm">
+                      {categoria === "Hogar" ? "🏠" : "🏬"}
+                    </span>
+                    <div>
+                      <p className="text-base font-semibold text-white">{categoria}</p>
+                      <p className="text-xs text-slate-400">{items.length} subcategorías</p>
+                    </div>
+                  </div>
+                  <span className="text-sm text-emerald-300 transition group-hover:translate-x-1">→</span>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {items.slice(0, 4).map((item) => (
+                    <span
+                      key={`${categoria}-${item.nombre}`}
+                      className="rounded-full border border-slate-700 bg-slate-950/80 px-2.5 py-1 text-[11px] text-slate-300"
+                    >
+                      {formatSubcategoriaLabel(item.nombre)}
+                    </span>
+                  ))}
+                  {items.length > 4 && (
+                    <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-[11px] text-emerald-300">
+                      +{items.length - 4}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       </div>
