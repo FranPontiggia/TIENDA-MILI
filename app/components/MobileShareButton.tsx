@@ -41,12 +41,12 @@ export default function MobileShareButton({ className }: MobileShareButtonProps)
         className ??
         "fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-slate-300/40 bg-slate-900/90 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition hover:bg-slate-800 md:hidden"
       }
-      aria-label="Compartir tienda"
+      aria-label="Compartir app"
     >
       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342a3 3 0 1 0 0-2.684m6.632 4.026a3 3 0 1 0 0-5.368m-6.632 2.684h6.632" />
       </svg>
-      {feedback === "idle" && <span>Compartir</span>}
+      {feedback === "idle" && <span>Compartir app</span>}
       {feedback === "ok" && <span>Listo</span>}
       {feedback === "error" && <span>No se pudo</span>}
     </button>
