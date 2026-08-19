@@ -29,7 +29,7 @@ export default function ProductShareButton({
         return;
       }
 
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(`${title}\n${text}`);
       setFeedback("ok");
       setTimeout(() => setFeedback("idle"), 1600);
     } catch {
