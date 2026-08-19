@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 
 type InstallAppButtonProps = {
   className?: string;
@@ -14,6 +15,7 @@ type BeforeInstallPromptEvent = Event & {
 export default function InstallAppButton({ className }: InstallAppButtonProps) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
+  const pathname = usePathname();
 
   const isIos = useMemo(() => {
     if (typeof navigator === "undefined") return false;
@@ -51,13 +53,18 @@ export default function InstallAppButton({ className }: InstallAppButtonProps) {
   }, []);
 
   async function handleInstall() {
+    const installFromHomeHint =
+      pathname !== "/" ? "\n\nTip: para que abra en Inicio, instalala estando en la pantalla de Inicio." : "";
+
     if (isIos) {
-      window.alert("En iPhone: toca Compartir y luego 'Agregar a inicio'.");
+      window.alert(`En iPhone: toca Compartir y luego 'Agregar a inicio'.${installFromHomeHint}`);
       return;
     }
 
     if (!deferredPrompt) {
-      window.alert("Si no aparece instalacion directa: abre el menu del navegador y elegi 'Instalar aplicacion' o 'Agregar a pantalla de inicio'.");
+      window.alert(
+        `Si no aparece instalacion directa: abre el menu del navegador y elegi 'Instalar aplicacion' o 'Agregar a pantalla de inicio'.${installFromHomeHint}`
+      );
       return;
     }
 
