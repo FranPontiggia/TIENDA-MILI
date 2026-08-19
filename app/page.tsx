@@ -8,7 +8,7 @@ import { getProductosDestacados } from "@/data/productos";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const destacados = await getProductosDestacados(6);
+  const destacados = await getProductosDestacados(8);
   const catalogoPorCategoria = categorias.map((categoria) => {
     const items = subcategorias.filter((subcategoria) => subcategoria.categoria === categoria.nombre);
     return { categoria: categoria.nombre, items };

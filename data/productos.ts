@@ -187,42 +187,58 @@ export async function getProductos(): Promise<Producto[]> {
 
 export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
   const safeLimit = Math.max(1, Math.min(Math.floor(limit), 24));
-
   const productos = await getProductos();
+  const rowSize = 2;
 
-  const getPriorityScore = (producto: Producto): number => {
-    const nombre = normalizeSearchText(producto.nombre);
-    const subcategoria = normalizeSearchText(producto.subcategoria);
+  const withText = productos.map((producto) => ({
+    producto,
+    nombre: normalizeSearchText(producto.nombre),
+    subcategoria: normalizeSearchText(producto.subcategoria),
+  }));
 
-    let score = 0;
+  const iphones = withText
+    .filter((item) => item.nombre.includes("iphone"))
+    .map((item) => item.producto)
+    .sort((a, b) => b.id - a.id);
 
-    if (nombre.includes("iphone")) {
-      score += 300;
+  const recientes = [...productos].sort((a, b) => b.id - a.id);
+
+  const cuidadoHogar = withText
+    .filter((item) => item.subcategoria.includes("cuidado del hogar") || item.subcategoria.includes("cuidado hogar"))
+    .map((item) => item.producto)
+    .sort((a, b) => b.id - a.id);
+
+  const electrohogar = withText
+    .filter((item) => item.subcategoria.includes("electrohogar"))
+    .map((item) => item.producto)
+    .sort((a, b) => b.id - a.id);
+
+  const seleccionados: Producto[] = [];
+  const vistos = new Set<number>();
+
+  const addFromGroup = (grupo: Producto[], maxItems: number): void => {
+    let added = 0;
+
+    for (const producto of grupo) {
+      if (seleccionados.length >= safeLimit || added >= maxItems) break;
+      if (vistos.has(producto.id)) continue;
+
+      seleccionados.push(producto);
+      vistos.add(producto.id);
+      added += 1;
     }
-
-    if (subcategoria.includes("cuidado del hogar") || subcategoria.includes("cuidado hogar")) {
-      score += 200;
-    }
-
-    if (subcategoria.includes("electrohogar")) {
-      score += 150;
-    }
-
-    return score;
   };
 
-  const prioritized = [...productos].sort((a, b) => {
-    const aScore = getPriorityScore(a);
-    const bScore = getPriorityScore(b);
+  // Orden por filas mobile: 1) iPhone, 2) recientes, 3) cuidado del hogar, 4) electrohogar.
+  addFromGroup(iphones, rowSize);
+  addFromGroup(recientes, rowSize);
+  addFromGroup(cuidadoHogar, rowSize);
+  addFromGroup(electrohogar, rowSize);
 
-    if (aScore === bScore) {
-      return b.id - a.id;
-    }
+  // Completa con los mas recientes si algun bloque no llega a 2 productos.
+  addFromGroup(recientes, safeLimit);
 
-    return bScore - aScore;
-  });
-
-  return prioritized.slice(0, safeLimit);
+  return seleccionados.slice(0, safeLimit);
 }
 
 export async function getProductosDestacadosPorCategoria(categoria: string, limit = 4): Promise<Producto[]> {
