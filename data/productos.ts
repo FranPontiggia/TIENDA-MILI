@@ -374,7 +374,7 @@ export async function getProductosBySubcategoriaPaginated(
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
     const filtrados = productos.filter((producto) =>
       normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
-    );
+    ).sort((a, b) => b.id - a.id);
     const total = filtrados.length;
     const totalPages = Math.max(1, Math.ceil(total / safePageSize));
     const pageClamped = Math.min(safePage, totalPages);
@@ -400,7 +400,7 @@ export async function getProductosBySubcategoriaPaginated(
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
     const filtrados = productos.filter((producto) =>
       normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
-    );
+    ).sort((a, b) => b.id - a.id);
     const total = filtrados.length;
     const totalPages = Math.max(1, Math.ceil(total / safePageSize));
     const pageClamped = Math.min(safePage, totalPages);
@@ -424,7 +424,7 @@ export async function getProductosBySubcategoriaPaginated(
     .from(productsTable)
     .select("*", { count: "exact" })
     .in("subcategoria", variants)
-    .order("id", { ascending: true })
+    .order("id", { ascending: false })
     .range(start, end);
 
   if (queryResult.error && /column\s+.*subcategoria\s+does not exist/i.test(queryResult.error.message)) {
@@ -432,7 +432,7 @@ export async function getProductosBySubcategoriaPaginated(
       .from(productsTable)
       .select("*", { count: "exact" })
       .in("subcategoría", variants)
-      .order("id", { ascending: true })
+      .order("id", { ascending: false })
       .range(start, end);
   }
 
@@ -448,7 +448,7 @@ export async function getProductosBySubcategoriaPaginated(
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
     const filtrados = productos.filter((producto) =>
       normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
-    );
+    ).sort((a, b) => b.id - a.id);
     const total = filtrados.length;
     const totalPages = Math.max(1, Math.ceil(total / safePageSize));
     const pageClamped = Math.min(safePage, totalPages);
@@ -467,7 +467,9 @@ export async function getProductosBySubcategoriaPaginated(
   const productos = (data as ProductoRow[] | null | undefined ?? []).map(toProducto).filter((producto) => producto.id > 0);
   if (productos.length === 0) {
     const allProductos = await getProductos();
-    const filtrados = allProductos.filter((producto) => areSameSubcategoria(producto.subcategoria, subcategoria));
+    const filtrados = allProductos
+      .filter((producto) => areSameSubcategoria(producto.subcategoria, subcategoria))
+      .sort((a, b) => b.id - a.id);
     const total = filtrados.length;
     const totalPages = Math.max(1, Math.ceil(total / safePageSize));
     const pageClamped = Math.min(safePage, totalPages);
