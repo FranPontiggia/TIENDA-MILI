@@ -199,7 +199,7 @@ export async function getProductosDestacados(limit = 6): Promise<Producto[]> {
   const iphones = withText
     .filter((item) => item.nombre.includes("iphone"))
     .map((item) => item.producto)
-    .sort((a, b) => b.id - a.id);
+    .sort(compareCelulares);
 
   const recientes = [...productos].sort((a, b) => b.id - a.id);
 
@@ -260,6 +260,58 @@ function normalizeSearchText(value: string): string {
     .trim();
 }
 
+function getIphoneSortKey(nombre: string): { generacion: number; modelo: number } | null {
+  const match = normalizeSearchText(nombre).match(/\biphone\s*(\d+)\s*(pro\s*max|promax|pro|max|plus|air|mini|e)?\b/);
+  if (!match) return null;
+
+  const modelo = (match[2] ?? "").replace(/\s/g, "");
+  const prioridadModelo: Record<string, number> = {
+    promax: 7,
+    pro: 6,
+    max: 5,
+    plus: 4,
+    air: 3,
+    mini: 2,
+    "": 1,
+    e: 0,
+  };
+
+  return { generacion: Number(match[1]), modelo: prioridadModelo[modelo] };
+}
+
+function compareCelulares(a: Producto, b: Producto): number {
+  const iphoneA = getIphoneSortKey(a.nombre);
+  const iphoneB = getIphoneSortKey(b.nombre);
+
+  if (iphoneA && !iphoneB) return -1;
+  if (!iphoneA && iphoneB) return 1;
+  if (iphoneA && iphoneB) {
+    if (iphoneA.generacion !== iphoneB.generacion) return iphoneB.generacion - iphoneA.generacion;
+    if (iphoneA.modelo !== iphoneB.modelo) return iphoneB.modelo - iphoneA.modelo;
+  }
+
+  return b.id - a.id;
+}
+
+function sortCelulares(productos: Producto[]): Producto[] {
+  return [...productos].sort(compareCelulares);
+}
+
+function paginateProductos(productos: Producto[], page: number, pageSize: number): PaginatedProductos {
+  const total = productos.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const pageClamped = Math.min(page, totalPages);
+  const start = (pageClamped - 1) * pageSize;
+
+  return {
+    productos: productos.slice(start, start + pageSize),
+    total,
+    page: pageClamped,
+    pageSize,
+    totalPages,
+  };
+}
+
 export async function getProductosDestacadosCurados(categoria: string, limit = 4): Promise<Producto[]> {
   const safeLimit = Math.max(1, Math.min(Math.floor(limit), 24));
   const normalizedCategoria = normalizeCategoriaName(categoria);
@@ -277,7 +329,7 @@ export async function getProductosDestacadosCurados(categoria: string, limit = 4
   const celulares = withText
     .filter((item) => item.subcategoria.includes("celular"))
     .map((item) => item.producto)
-    .sort((a, b) => b.id - a.id);
+    .sort(compareCelulares);
 
   const perfumes = withText
     .filter((item) => item.subcategoria.includes("perfume") || item.nombre.includes("perfume"))
@@ -367,6 +419,7 @@ export async function getProductosBySubcategoriaPaginated(
 ): Promise<PaginatedProductos> {
   const safePage = sanitizePage(page);
   const safePageSize = sanitizePageSize(pageSize);
+  const esCelulares = normalizeSearchText(subcategoria).includes("celular");
 
   if (isLocalOnlyMode()) {
     const productos = await getProductos();
@@ -374,20 +427,8 @@ export async function getProductosBySubcategoriaPaginated(
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
     const filtrados = productos.filter((producto) =>
       normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
-    ).sort((a, b) => b.id - a.id);
-    const total = filtrados.length;
-    const totalPages = Math.max(1, Math.ceil(total / safePageSize));
-    const pageClamped = Math.min(safePage, totalPages);
-    const start = (pageClamped - 1) * safePageSize;
-    const end = start + safePageSize;
-
-    return {
-      productos: filtrados.slice(start, end),
-      total,
-      page: pageClamped,
-      pageSize: safePageSize,
-      totalPages,
-    };
+    );
+    return paginateProductos(esCelulares ? sortCelulares(filtrados) : filtrados.sort((a, b) => b.id - a.id), safePage, safePageSize);
   }
 
   if (!supabase) {
@@ -400,25 +441,20 @@ export async function getProductosBySubcategoriaPaginated(
     const normalizedVariants = variants.map((item) => item.toLowerCase().trim());
     const filtrados = productos.filter((producto) =>
       normalizedVariants.includes(producto.subcategoria.toLowerCase().trim())
-    ).sort((a, b) => b.id - a.id);
-    const total = filtrados.length;
-    const totalPages = Math.max(1, Math.ceil(total / safePageSize));
-    const pageClamped = Math.min(safePage, totalPages);
-    const start = (pageClamped - 1) * safePageSize;
-    const end = start + safePageSize;
+    );
+    return paginateProductos(esCelulares ? sortCelulares(filtrados) : filtrados.sort((a, b) => b.id - a.id), safePage, safePageSize);
+  }
 
-    return {
-      productos: filtrados.slice(start, end),
-      total,
-      page: pageClamped,
-      pageSize: safePageSize,
-      totalPages,
-    };
+  const variants = getSubcategoriaVariants(subcategoria);
+
+  if (esCelulares) {
+    const productos = await getProductos();
+    const filtrados = productos.filter((producto) => areSameSubcategoria(producto.subcategoria, subcategoria));
+    return paginateProductos(sortCelulares(filtrados), safePage, safePageSize);
   }
 
   const start = (safePage - 1) * safePageSize;
   const end = start + safePageSize - 1;
-  const variants = getSubcategoriaVariants(subcategoria);
 
   let queryResult = await supabase
     .from(productsTable)
