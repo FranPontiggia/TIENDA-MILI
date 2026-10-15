@@ -4,7 +4,7 @@ import Link from "next/link";
 import HeaderProductSearch from "@/app/components/HeaderProductSearch";
 import InstallAppButton from "@/app/components/InstallAppButton";
 import MobileShareButton from "@/app/components/MobileShareButton";
-import PushNotificationsButton from "@/app/components/PushNotificationsButton";
+
 import { getProductos } from "@/data/productos";
 import "./globals.css";
 
@@ -72,9 +72,7 @@ export default async function RootLayout({
             <InstallAppButton className="hidden shrink-0 rounded-full border border-slate-500/50 bg-slate-800/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-100 transition hover:border-slate-300 hover:bg-slate-700 lg:inline-flex" />
             <HeaderProductSearch productos={searchProducts} />
           </div>
-          <div className="mx-auto flex w-full max-w-7xl justify-end px-4 pb-2 sm:px-6">
-            <PushNotificationsButton className="text-xs font-semibold text-emerald-200 underline decoration-emerald-400/50 underline-offset-4 transition hover:text-white disabled:opacity-60" />
-          </div>
+          
         </header>
 
         <div className="flex-1">{children}</div>
