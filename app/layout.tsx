@@ -4,6 +4,7 @@ import Link from "next/link";
 import HeaderProductSearch from "@/app/components/HeaderProductSearch";
 import InstallAppButton from "@/app/components/InstallAppButton";
 import MobileShareButton from "@/app/components/MobileShareButton";
+import PushNotificationsButton from "@/app/components/PushNotificationsButton";
 import { getProductos } from "@/data/productos";
 import "./globals.css";
 
@@ -67,27 +68,18 @@ export default async function RootLayout({
             <Link href="/" className="shrink-0 text-lg font-bold tracking-tight text-white sm:text-xl">
               Cuota Market
             </Link>
-            <Link
-              href="/solicitar-efectivo"
-              className="hidden shrink-0 items-center gap-2 rounded-full border border-emerald-400/45 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200 transition hover:border-emerald-300/70 hover:bg-emerald-500/25 lg:inline-flex"
-            >
-              Solicitar efectivo
-              <span aria-hidden>↗</span>
-            </Link>
+            
             <InstallAppButton className="hidden shrink-0 rounded-full border border-slate-500/50 bg-slate-800/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-100 transition hover:border-slate-300 hover:bg-slate-700 lg:inline-flex" />
             <HeaderProductSearch productos={searchProducts} />
+          </div>
+          <div className="mx-auto flex w-full max-w-7xl justify-end px-4 pb-2 sm:px-6">
+            <PushNotificationsButton className="text-xs font-semibold text-emerald-200 underline decoration-emerald-400/50 underline-offset-4 transition hover:text-white disabled:opacity-60" />
           </div>
         </header>
 
         <div className="flex-1">{children}</div>
 
-        <Link
-          href="/solicitar-efectivo"
-          className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full border border-emerald-300/50 bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition hover:bg-emerald-400 md:hidden"
-        >
-          Efectivo
-          <span aria-hidden>↗</span>
-        </Link>
+        
 
         <InstallAppButton className="fixed bottom-16 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-slate-300/40 bg-slate-900/90 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] transition hover:bg-slate-800 md:hidden" />
 
