@@ -36,13 +36,7 @@ export default async function Home() {
                 {categoria.nombre}
               </Link>
             ))}
-            <Link
-              href="/solicitar-efectivo"
-              className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-5 py-2 text-sm font-semibold text-emerald-300 transition hover:border-emerald-300/70 hover:bg-emerald-500/20"
-            >
-              Solicitar efectivo
-              <span aria-hidden>↗</span>
-            </Link>
+           
           </div>
         </header>
 
