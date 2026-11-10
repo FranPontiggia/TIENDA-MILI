@@ -121,6 +121,19 @@ create index if not exists idx_productos_id
 on productos (id);
 ```
 
+## Avisos push de productos nuevos
+
+Los clientes pueden activar los avisos desde la cabecera de la tienda. La importacion de productos no envia notificaciones. Despues de revisar la pagina, ejecuta `npm run notify:products` y escribe `ENVIAR` para confirmar. Para comprobar la configuracion sin enviar nada, usa `npm run notify:products:dry`.
+
+Antes de usarlo:
+
+1. Ejecuta el SQL de `supabase/push-subscriptions.sql` en el editor SQL de Supabase.
+2. Agrega `SUPABASE_SERVICE_ROLE_KEY` a `.env.local` y ejecuta `npm run setup:push:local`. El comando genera las claves VAPID y el token local sin mostrarlos, y los guarda en `.env.local`.
+3. Reinicia el servidor local, abre la tienda y activa los avisos desde la cabecera.
+4. Para produccion, configura `NEXT_PUBLIC_PUSH_VAPID_PUBLIC_KEY`, `PUSH_VAPID_PRIVATE_KEY`, `PUSH_VAPID_SUBJECT`, `SUPABASE_SERVICE_ROLE_KEY` y `PUSH_ADMIN_TOKEN` en Vercel. Usa las mismas claves VAPID y el mismo token generados localmente; cambia `PUSH_VAPID_SUBJECT` por un correo o URL de contacto real y redeploya.
+
+No compartas ni publiques `PUSH_VAPID_PRIVATE_KEY`, `SUPABASE_SERVICE_ROLE_KEY` ni `PUSH_ADMIN_TOKEN`. Web Push requiere HTTPS en produccion; `localhost` se admite para pruebas locales.
+
 ## Procesar capturas de celular
 
 Si guardas capturas en `capturas/`, podes recortarlas y convertirlas a WebP automaticamente:

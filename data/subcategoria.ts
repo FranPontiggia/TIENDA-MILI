@@ -15,7 +15,7 @@ export const subcategorias: Subcategoria[] = [
   { nombre: "Celulares", categoria: "Hogar" },
   { nombre: "Trabajo en casa", categoria: "Hogar" },
   { nombre: "Aire fresco", categoria: "Hogar" },
-  { nombre: "Patio", categoria: "Hogar" },
+  { nombre: "Patio / Verano", categoria: "Hogar" },
   { nombre: "Cuidado personal", categoria: "Hogar" },
 
   { nombre: "Accesorios de comercio", categoria: "Comercio" },

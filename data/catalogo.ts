@@ -4,6 +4,7 @@ function normalizeWhitespace(value: string): string {
 
 const SUBCATEGORIA_ALIASES: Record<string, string> = {
   "cuidado hogar": "cuidado del hogar",
+  "patio / verano": "patio",
 };
 
 export function normalizeSubcategoriaName(value: string): string {

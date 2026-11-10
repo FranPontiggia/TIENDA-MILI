@@ -12,6 +12,9 @@
     "sync:repo": "node scripts/export-products.mjs",
     "import:products:dry": "node scripts/import-products.mjs --dry-run",
     "import:products": "node scripts/import-products.mjs",
+    "setup:push:local": "node scripts/setup-push-local.mjs",
+    "notify:products": "node scripts/notify-new-products.mjs",
+    "notify:products:dry": "node scripts/notify-new-products.mjs --dry-run",
     "sync:supabase:dry": "node scripts/import-products.mjs --dry-run && node scripts/fix-product-images.mjs --dry-run",
     "sync:supabase": "node scripts/import-products.mjs && node scripts/fix-product-images.mjs",
     "fix:images:dry": "node scripts/fix-product-images.mjs --dry-run",
@@ -27,13 +30,15 @@
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.3",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
